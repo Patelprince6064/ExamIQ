@@ -1,0 +1,40 @@
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { TimerProvider } from "./TimerContext";
+
+import Login from "./login";
+import Register from "./Register";
+import Dashboard from "./Dashboard";
+import Home from "./home/home";
+
+import AIPractice from "./AIPractice";
+import Subjects from "./Subjects";
+import Analytics from "./Analytics";
+import Settings from "./Settings";
+import PdfUpload from "./PdfUpload";
+import PaperAnalyzer from "./PaperAnalyzer";
+import Roadmap from "./Roadmap";
+
+function App() {
+  return (
+    <TimerProvider>
+      <Routes>
+        <Route path="/login"    element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route path="/dashboard"  element={<Dashboard />} />
+        <Route path="/practice"   element={<AIPractice />} />
+        <Route path="/subjects"   element={<Subjects />} />
+        <Route path="/analytics"  element={<Analytics />} />
+        <Route path="/settings"   element={<Settings />} />
+        <Route path="/pdf-upload" element={<PdfUpload />} />
+        <Route path="/paper-analyzer" element={<PaperAnalyzer />} />
+        <Route path="/roadmap" element={<Roadmap />} />
+
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </TimerProvider>
+  );
+}
+
+export default App;
