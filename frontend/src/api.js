@@ -1,7 +1,8 @@
 // src/api.js
 // Central API helper — all backend calls go through here
 
-const BASE_URL = process.env.REACT_APP_API_URL || "";
+const rawBaseUrl = process.env.REACT_APP_API_URL || "";
+const BASE_URL = rawBaseUrl.replace(/\/+$/, "");
 
 // Get the JWT token from localStorage
 const getToken = () => localStorage.getItem("token");
