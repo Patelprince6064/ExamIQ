@@ -2,10 +2,16 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, "../uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+const os = require("os");
+
+// In serverless environments (e.g. Vercel), only os.tmpdir() is writable
+const uploadDir = process.env.VERCEL ? os.tmpdir() : path.join(__dirname, "../uploads");
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (e) {
+  console.warn("Upload dir initialization:", e.message);
 }
 
 const storage = multer.diskStorage({
