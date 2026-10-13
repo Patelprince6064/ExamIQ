@@ -67,6 +67,7 @@ app.get("/", (req, res) => {
 // ─── Routes ──────────────────────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/chat", chatRoutes);
+app.use("/api/chat", chatRoutes);
 app.use("/api/quiz", quizRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/subjects", subjectRoutes);
