@@ -1,0 +1,35 @@
+/* TextReveal — blur-to-sharp viewport text animation (landing-scoped via .tr- prefix) */
+.tr-root .tr-word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(0.35em);
+  transition-property: opacity, filter, transform;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tr-root.tr-visible .tr-word {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+/* Keeps characters of a word together so wrapping stays clean. */
+.tr-root .tr-chunk {
+  display: inline-block;
+  white-space: nowrap;
+}
+/* Gradient emphasis for highlighted words. */
+.tr-root .tr-hl {
+  background: linear-gradient(100deg, #2563EB, #38BDF8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-root .tr-word {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
+}

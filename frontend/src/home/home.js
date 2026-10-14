@@ -22,6 +22,9 @@ import {
   HiOutlineEye,
 } from "react-icons/hi";
 import "./home.css";
+import TextReveal from "./TextReveal";
+import Marquee from "./Marquee";
+import DottedGlobe from "./DottedGlobe";
 import logo from "../assets/logo.png";
 import circuitBrain from "../assets/circuit-brain.png";
 
@@ -254,15 +257,22 @@ const Home = () => {
             <span className="particle p3" />
             <span className="particle p4" />
           </div>
+          <div className="ex-globe-wrap" aria-hidden="true">
+            <DottedGlobe size={560} />
+          </div>
 
           <div className="ex-hero-inner">
             <div className="ex-hero-copy">
               <p className="ex-eyebrow">AI-powered exam preparation</p>
-              <h1>
-                Prepare <span className="grad">Smarter.</span>
-                <br />
-                Achieve More.
-              </h1>
+              <TextReveal
+                as="h1"
+                text={"Prepare Smarter.\nAchieve More."}
+                splitBy="words"
+                highlight={["Smarter."]}
+                staggerDelay={0.08}
+                duration={0.6}
+                once={true}
+              />
               <p className="ex-lead">
                 Your personal AI exam coach to practice smarter, understand
                 your weak topics, and build a more effective study plan.
@@ -398,7 +408,7 @@ const Home = () => {
         >
           <div className="ex-section-head rv-up">
             <p className="ex-kicker">Platform preview</p>
-            <h2>Your preparation, beautifully organized</h2>
+            <TextReveal as="h2" text="Your preparation, beautifully organized" splitBy="words" staggerDelay={0.045} duration={0.5} once={true} />
             <p>
               A preview of the ExamIQ dashboard with sample data for
               illustration — not live user information.
@@ -482,7 +492,7 @@ const Home = () => {
         <section className="ex-features" id="features" aria-label="Features">
           <div className="ex-section-head rv-up">
             <p className="ex-kicker">Features</p>
-            <h2>Everything You Need to Prepare Better</h2>
+            <TextReveal as="h2" text="Everything You Need to Prepare Better" splitBy="words" staggerDelay={0.045} duration={0.5} once={true} />
             <p>
               Powerful study tools designed to help you learn efficiently and
               approach exams with confidence.
@@ -512,7 +522,7 @@ const Home = () => {
         <section className="ex-how" id="how" aria-label="How it works">
           <div className="ex-section-head rv-up">
             <p className="ex-kicker">How it works</p>
-            <h2>From goals to exam-ready in three steps</h2>
+            <TextReveal as="h2" text="From goals to exam-ready in three steps" splitBy="words" staggerDelay={0.045} duration={0.5} once={true} />
           </div>
           <div className="ex-steps">
             <span className="ex-steps-line" aria-hidden="true">
@@ -562,7 +572,7 @@ const Home = () => {
           <div className="ex-split-inner">
             <div className="ex-split-copy rv-left">
               <p className="ex-kicker">Smart study tools</p>
-              <h2>Turn Your Notes Into Better Practice.</h2>
+              <TextReveal as="h2" text="Turn Your Notes Into Better Practice." splitBy="words" staggerDelay={0.045} duration={0.5} once={true} />
               <p>
                 Upload lecture slides or notes and get exam-style questions
                 generated from your own content. The preview below is an
@@ -641,7 +651,7 @@ const Home = () => {
         >
           <div className="ex-section-head rv-up">
             <p className="ex-kicker">Performance insights</p>
-            <h2>Know What to Focus on Next.</h2>
+            <TextReveal as="h2" text="Know What to Focus on Next." splitBy="words" staggerDelay={0.045} duration={0.5} once={true} />
             <p>
               Clean, sample visualizations that show how performance data can
               guide your next session. Illustrative data only.
@@ -737,7 +747,7 @@ const Home = () => {
         <section className="ex-benefits" id="benefits" aria-label="Benefits">
           <div className="ex-section-head rv-up">
             <p className="ex-kicker">Why ExamIQ</p>
-            <h2>Study less, learn more</h2>
+            <TextReveal as="h2" text="Study less, learn more" splitBy="words" staggerDelay={0.045} duration={0.5} once={true} />
           </div>
 
           <div className="ex-benefit rv-left">
@@ -797,9 +807,24 @@ const Home = () => {
           </div>
         </section>
 
+        {/* ══ STUDENT STORIES ══ */}
+        <section className="ex-stories" id="stories" aria-label="Student stories">
+          <div className="ex-section-head rv-up">
+            <p className="ex-kicker">Student stories</p>
+            <TextReveal as="h2" text="Learners stay consistent with ExamIQ" splitBy="words" staggerDelay={0.045} duration={0.5} once={true} />
+            <p>
+              Sample stories for illustration — shared with the spirit of
+              focused, confident preparation.
+            </p>
+          </div>
+          <div className="rv-up">
+            <Marquee />
+          </div>
+        </section>
+
         {/* ══ FINAL CTA ══ */}
         <section className="ex-final rv-scale" aria-label="Get started">
-          <h2>Your Next Exam Starts with a Better Plan.</h2>
+          <TextReveal as="h2" text="Your Next Exam Starts with a Better Plan." splitBy="words" staggerDelay={0.045} duration={0.5} once={true} />
           <p>
             Take control of your preparation with smarter practice and
             personalized learning insights.

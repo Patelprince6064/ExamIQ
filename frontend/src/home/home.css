@@ -119,7 +119,7 @@
 }
 .ex-hero-copy h1 {
   font-size: clamp(38px, 5vw, 60px); font-weight: 800; margin: 0 0 18px;
-  animation: fadeUp 0.7s var(--ease) 0.08s both;
+  /* Entrance owned by TextReveal (blur-to-sharp stagger) — no double animation. */
 }
 .ex-hero-copy h1 .grad {
   background: linear-gradient(100deg, var(--blue), var(--cyan));
@@ -218,8 +218,11 @@
 
 /* ── SECTION SCAFFOLD ── */
 .ex-preview, .ex-features, .ex-how, .ex-split, .ex-insights, .ex-benefits { padding: 92px 28px; }
+/* Stories marquee: full-bleed rows, contained heading. */
+.ex-stories { padding: 92px 0; background: #fff; overflow: hidden; }
+.ex-stories .ex-section-head { padding: 0 28px; }
 /* Skip offscreen rendering work until sections near the viewport. */
-.ex-preview, .ex-features, .ex-how, .ex-split, .ex-insights, .ex-benefits, .ex-final {
+.ex-preview, .ex-features, .ex-how, .ex-split, .ex-insights, .ex-benefits, .ex-stories, .ex-final {
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
 }
@@ -466,6 +469,8 @@
   .ex-doc { flex: none; }
   .ex-doc-arrow { transform: rotate(90deg); align-self: center; }
   .ex-preview, .ex-features, .ex-how, .ex-split, .ex-insights, .ex-benefits { padding: 64px 20px; }
+  .ex-stories { padding: 64px 0; }
+  .ex-stories .ex-section-head { padding: 0 20px; }
   .ex-final { padding: 56px 22px; }
   .ex-footer-nav { grid-template-columns: 1fr 1fr; }
 }
