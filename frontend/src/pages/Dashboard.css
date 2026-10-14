@@ -10,6 +10,21 @@
   background: #f8fafc;
 }
 
+/* Base flex shell shared by every page that mounts SharedSidebar.
+   (Those pages use plain `.dashboard` without `.dash`.) */
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+/* Base content column for pages using `.main` (restores the
+   original flex behavior for Analytics / Subjects / Settings). */
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
 /* ── MAIN ── */
 .dash-main {
   flex: 1;
