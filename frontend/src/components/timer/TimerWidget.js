@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { HiOutlineClock, HiOutlinePlay, HiOutlinePause, HiOutlineRefresh, HiOutlineCog, HiOutlineX, HiOutlineChevronDown, HiOutlineChevronUp } from "react-icons/hi";
-import { useTimer, formatTime } from "./TimerContext";
+import { useTimer, formatTime } from "../../context/TimerContext";
 import "./Timer.css";
 
 const PRESETS = [

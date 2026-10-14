@@ -5,8 +5,8 @@ import {
   Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement,
   PointElement, ArcElement, Tooltip, Legend,
 } from "chart.js";
-import { apiAnalytics, apiLeaderboard } from "./api";
-import { SharedSidebar } from "./SharedLayout";
+import { apiAnalytics, apiLeaderboard } from "../services/api";
+import { SharedSidebar } from "../components/layout/SharedLayout";
 import "./Analytics.css";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Tooltip, Legend);

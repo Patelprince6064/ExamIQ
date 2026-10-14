@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   apiGetSubjects, apiGenerateQuiz, apiSubmitQuiz, apiGenerateDescriptive, apiGetTopicNotes
-} from "./api";
-import { SharedSidebar } from "./SharedLayout";
+} from "../services/api";
+import { SharedSidebar } from "../components/layout/SharedLayout";
 import {
   HiOutlineDocumentText,
   HiOutlineClipboardCheck,

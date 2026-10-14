@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiAnalyzePaper } from "./api";
-import { SharedSidebar } from "./SharedLayout";
+import { apiAnalyzePaper } from "../services/api";
+import { SharedSidebar } from "../components/layout/SharedLayout";
 import "./PdfUpload.css";
 import "./PaperAnalyzer.css";
 

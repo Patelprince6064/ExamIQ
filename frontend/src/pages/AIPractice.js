@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./AIPractice.css";
-import { apiChat, apiExplain, apiStudyPlan } from "./api";
+import { apiChat, apiExplain, apiStudyPlan } from "../services/api";
 import { useNavigate, useLocation } from "react-router-dom";
-import { SharedSidebar } from "./SharedLayout";
+import { SharedSidebar } from "../components/layout/SharedLayout";
 
 const QUICK_PROMPTS = [
   "Explain Deadlock in OS",

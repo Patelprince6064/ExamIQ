@@ -1,19 +1,19 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { TimerProvider } from "./TimerContext";
+import { TimerProvider } from "./context/TimerContext";
 
-import Login from "./login";
-import Register from "./Register";
-import Dashboard from "./Dashboard";
-import Home from "./home/home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 
-import AIPractice from "./AIPractice";
-import Subjects from "./Subjects";
-import Analytics from "./Analytics";
-import Settings from "./Settings";
-import PdfUpload from "./PdfUpload";
-import PaperAnalyzer from "./PaperAnalyzer";
-import Roadmap from "./Roadmap";
+import AIPractice from "./pages/AIPractice";
+import Subjects from "./pages/Subjects";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
+import PdfUpload from "./pages/PdfUpload";
+import PaperAnalyzer from "./pages/PaperAnalyzer";
+import Roadmap from "./pages/Roadmap";
 
 function App() {
   return (

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { HiOutlineCog, HiOutlineUser, HiOutlineLockClosed } from "react-icons/hi";
 import {
   apiGetProfile, apiUpdateProfile, apiChangePassword, saveAuth
-} from "./api";
-import { SharedSidebar } from "./SharedLayout";
+} from "../services/api";
+import { SharedSidebar } from "../components/layout/SharedLayout";
 import "./Settings.css";
 
 function Settings() {

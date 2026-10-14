@@ -6,8 +6,8 @@ import {
   apiDeleteNote,
   apiGenerateQuizFromNote,
   apiSubmitQuiz,
-} from "./api";
-import { SharedSidebar } from "./SharedLayout";
+} from "../services/api";
+import { SharedSidebar } from "../components/layout/SharedLayout";
 import "./PdfUpload.css";
 
 const SUBJECTS = ["General", "DSA", "OS", "DBMS", "CN", "AI", "Maths", "Other"];

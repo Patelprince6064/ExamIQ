@@ -7,8 +7,8 @@ import {
   CategoryScale, LinearScale, BarElement,
   ArcElement, Tooltip, Legend,
 } from "chart.js";
-import { apiDashboard, getUser } from "./api";
-import { SharedSidebar } from "./SharedLayout";
+import { apiDashboard, getUser } from "../services/api";
+import { SharedSidebar } from "../components/layout/SharedLayout";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 

@@ -21,10 +21,10 @@ import {
   HiOutlineFlag,
   HiOutlineEye,
 } from "react-icons/hi";
-import "./home.css";
-import TextReveal from "./TextReveal";
-import Marquee from "./Marquee";
-import DottedGlobe from "./DottedGlobe";
+import "./Home.css";
+import TextReveal from "../components/landing/TextReveal";
+import Marquee from "../components/landing/Marquee";
+import DottedGlobe from "../components/landing/DottedGlobe";
 import logo from "../assets/logo.png";
 import circuitBrain from "../assets/circuit-brain.png";
 

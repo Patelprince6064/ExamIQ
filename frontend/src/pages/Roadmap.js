@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { SharedSidebar } from "./SharedLayout";
-import { apiGenerateRoadmap } from "./api";
+import { SharedSidebar } from "../components/layout/SharedLayout";
+import { apiGenerateRoadmap } from "../services/api";
 import "./Roadmap.css";
 
 function Roadmap() {

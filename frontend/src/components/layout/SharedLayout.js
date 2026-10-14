@@ -11,9 +11,9 @@ import {
   HiOutlineDocumentSearch,
   HiOutlineCog,
 } from "react-icons/hi";
-import { clearAuth, getUser } from "./api";
-import logo from "./assets/logo.png";
-import TimerWidget from "./TimerWidget";
+import { clearAuth, getUser } from "../../services/api";
+import logo from "../../assets/logo.png";
+import TimerWidget from "../timer/TimerWidget";
 
 const NAV_GROUPS = [
   {
