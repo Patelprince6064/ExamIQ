@@ -110,8 +110,17 @@ const Home = () => {
   const [active, setActive] = useState("");
   const year = new Date().getFullYear();
 
+  /* rAF-throttled scroll flag: one state update per frame, no scroll jank. */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 16);
+        ticking = false;
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);

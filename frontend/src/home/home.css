@@ -1,6 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-/* ═══════════ EXAMIQ PREMIUM WHITE THEME (scoped to landing) ═══════════ */
+/* NOTE: Inter font is loaded via <link> in public/index.html (faster than @import).
+   ═══════════ EXAMIQ PREMIUM WHITE THEME (scoped to landing) ═══════════ */
 .examiq {
   --bg: #FFFFFF;
   --bg-alt: #F7FAFF;
@@ -45,10 +44,10 @@
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 .ex-nav.is-scrolled {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 4px 20px rgba(23, 32, 51, 0.06);
+  /* Solid surface instead of backdrop-blur: identical look on white,
+     but avoids re-blurring the whole page on every scroll frame. */
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 4px 20px rgba(23, 32, 51, 0.07);
 }
 .ex-nav-inner {
   max-width: 1180px; margin: 0 auto;
@@ -158,8 +157,7 @@
 .ex-hero-visual { position: relative; min-height: 500px; animation: fadeScale 0.8s var(--ease) 0.3s both; }
 .ex-dash-card {
   position: absolute; top: 6%; left: 8%; right: 8%;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  background: #fff;
   border: 1px solid var(--border); border-radius: 20px;
   box-shadow: var(--shadow-md);
   padding: 22px;
@@ -180,10 +178,12 @@
 .ex-dash-progress strong { display: block; font-size: 15px; }
 .ex-dash-progress small { color: var(--muted); font-size: 12px; display: block; margin: 2px 0 8px; }
 .ex-meter { height: 7px; border-radius: 99px; background: #EDF2F9; overflow: hidden; }
-.ex-meter i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--cyan)); }
-.in-view .ex-meter i { animation: fillX 1.2s var(--ease) both; }
-.ex-dash-card .ex-meter i { animation: fillX 1.2s var(--ease) 0.6s both; }
-@keyframes fillX { from { width: 0 !important; } }
+/* GPU-friendly fill: scaleX (composited) instead of width (layout thrash). */
+.ex-meter i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--cyan));
+  transform: scaleX(0); transform-origin: left center; }
+.in-view .ex-meter i { animation: fillX 1.2s var(--ease) forwards; }
+.ex-dash-card .ex-meter i { animation: fillX 1.2s var(--ease) 0.6s forwards; }
+@keyframes fillX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .ex-mini-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); display: block; margin-bottom: 10px; }
 .ex-sub-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 13px; }
 .ex-sub-row:last-child { margin-bottom: 0; }
@@ -192,8 +192,7 @@
 .ex-meter.sm { flex: 1; }
 
 .ex-float {
-  position: absolute; background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  position: absolute; background: #fff;
   border: 1px solid var(--border); border-radius: 15px;
   box-shadow: var(--shadow-md);
   padding: 14px 16px; width: 224px;
@@ -219,6 +218,11 @@
 
 /* ── SECTION SCAFFOLD ── */
 .ex-preview, .ex-features, .ex-how, .ex-split, .ex-insights, .ex-benefits { padding: 92px 28px; }
+/* Skip offscreen rendering work until sections near the viewport. */
+.ex-preview, .ex-features, .ex-how, .ex-split, .ex-insights, .ex-benefits, .ex-final {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
 .ex-preview { background: var(--bg-alt); }
 .ex-insights { background: var(--bg-blue); }
 .ex-section-head { text-align: center; max-width: 620px; margin: 0 auto 52px; }
@@ -415,9 +419,11 @@
 
 /* ── SCROLL REVEAL (16–24px rise, one-shot) ── */
 .rv-up, .rv-left, .rv-right, .rv-scale {
-  opacity: 0; will-change: opacity, transform;
+  opacity: 0;
   transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
 }
+/* Release compositor layers once revealed — keeps memory/scroll smooth. */
+.rv-up.in-view, .rv-left.in-view, .rv-right.in-view, .rv-scale.in-view { will-change: auto; }
 .rv-up { transform: translateY(22px); }
 .rv-left { transform: translateX(-22px); }
 .rv-right { transform: translateX(22px); }
@@ -438,6 +444,9 @@
   .ex-footer-inner { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
+  /* Reduce continuous paint work on low-powered devices. */
+  .ex-hero-bg .particle { display: none; }
+  .wash-a, .wash-b { animation: none; }
   .ex-nav-links, .ex-nav-cta .ex-login, .ex-nav-cta .ex-cta { display: none; }
   .ex-menu-btn { display: block; }
   .ex-mobile { display: flex; flex-direction: column; padding: 0 24px; background: #fff; border-bottom: 1px solid var(--border);
