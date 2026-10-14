@@ -718,3 +718,148 @@
   .hero-stat-divider { display: none; }
   .hero-buttons { flex-direction: column; align-items: center; }
 }
+
+/* ═══════════════════════════════════════════════════
+   PRO SLIDE-IN SCROLL REVEAL SYSTEM
+   ═══════════════════════════════════════════════════ */
+html { scroll-behavior: smooth; }
+
+.reveal-up, .reveal-left, .reveal-right, .reveal-scale, .reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-up, .reveal { transform: translateY(48px); }
+.reveal-left { transform: translateX(-64px); }
+.reveal-right { transform: translateX(64px); }
+.reveal-scale { transform: translateY(24px) scale(0.96); }
+
+.reveal-up.in-view, .reveal-left.in-view, .reveal-right.in-view,
+.reveal-scale.in-view, .reveal.in-view {
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1);
+}
+
+/* Hero load slide-ins (staged entrance) */
+.hero-badge { animation: slideDownFade 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+.hero h1 { animation: slideUpFade 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both; }
+.hero > p { animation: slideUpFade 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s both; }
+.hero-buttons { animation: slideUpFade 0.8s cubic-bezier(0.22,1,0.36,1) 0.3s both; }
+.hero-graphic-container { animation: slideUpFade 0.9s cubic-bezier(0.22,1,0.36,1) 0.4s both; }
+.hero-stats { animation: slideUpFade 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both; }
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(36px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideLeftFade {
+  from { opacity: 0; transform: translateX(-48px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideRightFade {
+  from { opacity: 0; transform: translateX(48px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Floating badges */
+.badge-top, .badge-bottom { animation: floatY 4s ease-in-out infinite; }
+.badge-bottom { animation-delay: 2s; }
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ═══════════════════════════════════════════════════
+   PRO BUTTON ANIMATION SYSTEM
+   ═══════════════════════════════════════════════════ */
+.btn-anim {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+.btn-anim:hover { transform: translateY(-3px) scale(1.02); }
+.btn-anim:active { transform: translateY(-1px) scale(0.98); }
+
+.btn-anim .btn-arrow {
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-anim:hover .btn-arrow { transform: translateX(6px); }
+
+/* Shine sweep */
+.btn-shine::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -80%;
+  width: 55%; height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.45), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.2s;
+  z-index: 1;
+  pointer-events: none;
+}
+.btn-shine:hover::before { left: 135%; transition: left 0.65s ease; }
+
+/* Click ripple */
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  transform: scale(0);
+  animation: rippleExpand 0.6s ease-out forwards;
+  pointer-events: none;
+  z-index: 2;
+}
+@keyframes rippleExpand {
+  to { transform: scale(2.6); opacity: 0; }
+}
+
+/* Apply same pro feel to all CTA buttons even without .btn-anim */
+.nav-links .login-btn, .contact-btn, .btn-cta-white, .btn-cta-outline {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.nav-links .login-btn:active, .contact-btn:active,
+.btn-cta-white:active, .btn-cta-outline:active { transform: scale(0.97); }
+
+/* Pulsing glow on primary CTA to draw eye */
+.btn.primary.btn-shine {
+  animation: ctaGlow 3.2s ease-in-out infinite;
+}
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(37,99,235,0.38); }
+  50% { box-shadow: 0 4px 32px rgba(37,99,235,0.55), 0 0 0 6px rgba(37,99,235,0.08); }
+}
+
+/* Card hover slide accent line */
+.feature-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 28px; right: 28px;
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+.feature-card:hover::after { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up, .reveal-left, .reveal-right, .reveal-scale, .reveal,
+  .hero-badge, .hero h1, .hero > p, .hero-buttons,
+  .hero-graphic-container, .hero-stats {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  html { scroll-behavior: auto; }
+}
