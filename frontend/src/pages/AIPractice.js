@@ -495,14 +495,15 @@ function AIPractice() {
                   </div>
                 </div>
 
-                <div
-                  className="ai-chatbox"
-                  ref={chatboxRef}
-                  onScroll={handleScroll}
-                  role="log"
-                  aria-live="polite"
-                  aria-label="Conversation"
-                >
+                <div className="ai-chatbox-wrap">
+                  <div
+                    className="ai-chatbox"
+                    ref={chatboxRef}
+                    onScroll={handleScroll}
+                    role="log"
+                    aria-live="polite"
+                    aria-label="Conversation"
+                  >
                   {messages.map((msg) => (
                     <div key={msg.id} className={`ai-msg ${msg.sender}`}>
                       {msg.sender === "ai" && (
@@ -551,21 +552,22 @@ function AIPractice() {
                       </div>
                     </div>
                   )}
-                  <div ref={chatEndRef} />
-                </div>
+                    <div ref={chatEndRef} />
+                  </div>
 
-                {showScrollDown && (
-                  <button
-                    className="ai-scrolldown"
-                    onClick={() =>
-                      chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
-                    }
-                    title="Scroll to latest"
-                    aria-label="Scroll to latest message"
-                  >
-                    <HiOutlineChevronDown size={16} />
-                  </button>
-                )}
+                  {showScrollDown && (
+                    <button
+                      className="ai-scrolldown"
+                      onClick={() =>
+                        chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
+                      }
+                      title="Scroll to latest"
+                      aria-label="Scroll to latest message"
+                    >
+                      <HiOutlineChevronDown size={16} />
+                    </button>
+                  )}
+                </div>
               </>
             )}
 

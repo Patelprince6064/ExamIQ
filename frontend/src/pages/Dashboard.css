@@ -4,14 +4,9 @@
    text #172033 · muted #64748B · border #E2E8F0
    ══════════════════════════════════════════ */
 
-.dashboard.dash {
-  display: flex;
-  min-height: 100vh;
-  background: #f8fafc;
-}
-
-/* Base flex shell shared by every page that mounts SharedSidebar.
-   (Those pages use plain `.dashboard` without `.dash`.) */
+/* App shell shared by every page that mounts SharedSidebar:
+   sidebar keeps its rendered width (252px, 78px collapsed,
+   off-canvas drawer on mobile); content fills the rest. */
 .dashboard {
   display: flex;
   min-height: 100vh;
