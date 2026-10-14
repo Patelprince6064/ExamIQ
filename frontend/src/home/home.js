@@ -25,7 +25,7 @@ import "./home.css";
 import logo from "../assets/logo.png";
 import circuitBrain from "../assets/circuit-brain.png";
 
-/* ── Scroll-reveal (IntersectionObserver, transform+opacity only) ── */
+/* ── One-shot scroll reveal (transform + opacity only) ── */
 const useReveal = () => {
   useEffect(() => {
     const els = document.querySelectorAll(
@@ -58,44 +58,50 @@ const NAV_LINKS = [
   { href: "#contact", label: "Contact" },
 ];
 
+const VALUE_POINTS = [
+  { icon: HiOutlineSparkles, label: "Personalized practice" },
+  { icon: HiOutlineEye, label: "Intelligent insights" },
+  { icon: HiOutlineTrendingUp, label: "Progress tracking" },
+];
+
 const FEATURES = [
   {
     icon: HiOutlineSparkles,
     title: "AI Question Generator",
-    desc: "Generate exam-style questions for your selected topics, tuned to university difficulty.",
+    desc: "Create practice questions for selected subjects and topics.",
   },
   {
     icon: HiOutlineDocumentText,
     title: "Smart PDF Learning",
-    desc: "Upload study material and generate practice questions directly from your notes.",
+    desc: "Transform uploaded study material into useful practice questions.",
   },
   {
     icon: HiOutlineChartBar,
     title: "Performance Analytics",
-    desc: "Track accuracy, study progress, and subject-level performance in one view.",
+    desc: "Track accuracy and progress across subjects.",
   },
   {
     icon: HiOutlineShieldExclamation,
     title: "Academic Risk Insights",
-    desc: "Analyze available quiz history to identify potential areas of academic risk.",
+    desc: "Identify potential concerns using available performance data.",
   },
   {
     icon: HiOutlineCalendar,
-    title: "Adaptive Study Planner",
-    desc: "Organize preparation around weak topics, available time, and exam dates.",
+    title: "Personalized Study Planner",
+    desc: "Organize preparation around priorities and available time.",
   },
   {
     icon: HiOutlineSearch,
     title: "Weak Topic Detection",
-    desc: "Discover areas that need additional practice and attention, automatically.",
+    desc: "Identify areas that deserve additional practice.",
   },
 ];
 
-const DASH_SUBJECTS = [
-  { name: "Operating Systems", pct: 82, tone: "blue" },
-  { name: "DBMS", pct: 68, tone: "cyan" },
-  { name: "DSA", pct: 74, tone: "violet" },
-  { name: "Networks", pct: 57, tone: "amber" },
+const SUBJECTS = [
+  { name: "Operating Systems", pct: 82 },
+  { name: "DBMS", pct: 68 },
+  { name: "DSA", pct: 74 },
+  { name: "Networks", pct: 57 },
 ];
 
 const Home = () => {
@@ -105,7 +111,7 @@ const Home = () => {
   const year = new Date().getFullYear();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 16);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -119,7 +125,8 @@ const Home = () => {
     const sections = ids
       .map((id) => document.getElementById(id))
       .filter(Boolean);
-    if (!("IntersectionObserver" in window) || sections.length === 0) return undefined;
+    if (!("IntersectionObserver" in window) || sections.length === 0)
+      return undefined;
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -132,7 +139,7 @@ const Home = () => {
     return () => io.disconnect();
   }, []);
 
-  /* Button ripple */
+  /* Subtle button ripple */
   useEffect(() => {
     const onClick = (e) => {
       const btn = e.currentTarget;
@@ -144,7 +151,7 @@ const Home = () => {
       ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
       ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
       btn.appendChild(ripple);
-      window.setTimeout(() => ripple.remove(), 650);
+      window.setTimeout(() => ripple.remove(), 600);
     };
     const btns = document.querySelectorAll(".btn-anim");
     btns.forEach((b) => b.addEventListener("click", onClick));
@@ -160,12 +167,12 @@ const Home = () => {
   }, [menuOpen]);
 
   return (
-    <div className="examiq">
+    <div className="examiq light">
       {/* ══ NAVBAR ══ */}
       <header className={`ex-nav ${scrolled ? "is-scrolled" : ""}`}>
         <nav className="ex-nav-inner" aria-label="Primary">
           <Link to="/" className="ex-brand" aria-label="ExamIQ home">
-            <img src={logo} alt="ExamIQ logo" width="34" height="34" />
+            <img src={logo} alt="ExamIQ logo" width="32" height="32" />
             <span>
               Exam<em>IQ</em>
             </span>
@@ -188,7 +195,7 @@ const Home = () => {
             <Link to="/login" className="ex-login">
               Login
             </Link>
-            <Link to="/register" className="ex-cta btn-anim btn-shine">
+            <Link to="/register" className="ex-cta btn-anim">
               <span className="btn-label">Get Started</span>
             </Link>
             <button
@@ -202,7 +209,6 @@ const Home = () => {
           </div>
         </nav>
 
-        {/* Mobile menu */}
         <div className={`ex-mobile ${menuOpen ? "open" : ""}`}>
           {NAV_LINKS.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>
@@ -232,146 +238,161 @@ const Home = () => {
         {/* ══ HERO ══ */}
         <section className="ex-hero" aria-label="Introduction">
           <div className="ex-hero-bg" aria-hidden="true">
-            <span className="orb orb-a" />
-            <span className="orb orb-b" />
-            <span className="grid-overlay" />
+            <span className="wash wash-a" />
+            <span className="wash wash-b" />
             <span className="particle p1" />
             <span className="particle p2" />
             <span className="particle p3" />
             <span className="particle p4" />
-            <span className="particle p5" />
           </div>
 
           <div className="ex-hero-inner">
             <div className="ex-hero-copy">
-              <p className="ex-eyebrow">
-                <span className="ex-eyebrow-dot" />
-                Your personal AI exam coach
-              </p>
+              <p className="ex-eyebrow">AI-powered exam preparation</p>
               <h1>
-                Your Next Exam Deserves a{" "}
-                <span className="grad">Smarter Strategy.</span>
+                Prepare <span className="grad">Smarter.</span>
+                <br />
+                Achieve More.
               </h1>
               <p className="ex-lead">
-                Turn your notes into practice, uncover your weak topics, and
-                build a personalized study plan with AI-powered exam
-                preparation.
+                Your personal AI exam coach to practice smarter, understand
+                your weak topics, and build a more effective study plan.
               </p>
               <div className="ex-hero-btns">
-                <Link
-                  to="/register"
-                  className="ex-btn-primary btn-anim btn-shine"
-                >
+                <Link to="/register" className="ex-btn-primary btn-anim">
                   <span className="btn-label">Start Preparing Free</span>
                   <span className="btn-arrow" aria-hidden="true">
                     →
                   </span>
                 </Link>
-                <a href="#preview" className="ex-btn-ghost btn-anim">
-                  <span className="btn-label">Explore the Platform</span>
+                <a href="#features" className="ex-btn-ghost btn-anim">
+                  <span className="btn-label">Explore Features</span>
                   <span className="btn-arrow" aria-hidden="true">
                     ↓
                   </span>
                 </a>
               </div>
-              <p className="ex-trust">
-                <HiOutlineCheckCircle size={16} aria-hidden="true" />
-                Practice smarter. Track progress. Improve with every session.
-              </p>
+              <ul className="ex-values">
+                {VALUE_POINTS.map((v) => {
+                  const Icon = v.icon;
+                  return (
+                    <li key={v.label}>
+                      <Icon size={16} aria-hidden="true" />
+                      {v.label}
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
 
-            {/* Hero visual */}
-            <div className="ex-hero-visual" aria-label="AI learning visualization preview">
-              <div className="neural-stage">
-                <div className="neural-core">
+            {/* Hero product visualization */}
+            <div
+              className="ex-hero-visual"
+              aria-label="ExamIQ product preview illustration"
+            >
+              <div className="ex-dash-card">
+                <div className="ex-dash-top">
+                  <span className="ex-dash-logo">
+                    <img src={logo} alt="" width="22" height="22" />
+                    ExamIQ
+                  </span>
+                  <span className="ex-sample">Sample preview</span>
+                </div>
+                <div className="ex-dash-progress">
+                  <div className="ex-ring" style={{ "--p": "68%" }}>
+                    <b>68%</b>
+                  </div>
+                  <div>
+                    <strong>Study progress</strong>
+                    <small>12-day streak · 78% quiz accuracy</small>
+                    <div className="ex-meter">
+                      <i style={{ width: "78%" }} />
+                    </div>
+                  </div>
+                </div>
+                <div className="ex-dash-subjects">
+                  <span className="ex-mini-title">Subject performance</span>
+                  {SUBJECTS.slice(0, 3).map((s) => (
+                    <div className="ex-sub-row" key={s.name}>
+                      <span>{s.name}</span>
+                      <div className="ex-meter sm">
+                        <i style={{ width: `${s.pct}%` }} />
+                      </div>
+                      <b>{s.pct}%</b>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="ex-float ex-fc-quiz">
+                <div className="ex-fc-head">
+                  <span className="ex-fc-icon">
+                    <HiOutlineLightningBolt size={14} />
+                  </span>
+                  <div>
+                    <strong>OS Quiz · Q3/10</strong>
+                    <small>Process Scheduling</small>
+                  </div>
+                </div>
+                <p>Which algorithm avoids deadlock?</p>
+                <div className="ex-fc-opts">
+                  <span>Round Robin</span>
+                  <span className="ok">Banker&apos;s ✓</span>
+                </div>
+              </div>
+
+              <div className="ex-float ex-fc-ai">
+                <div className="ex-fc-head">
                   <img
                     src={circuitBrain}
-                    alt="ExamIQ neural study engine"
-                    loading="eager"
+                    alt=""
+                    width="30"
+                    height="30"
+                    loading="lazy"
                   />
-                  <span className="core-glow" aria-hidden="true" />
+                  <div>
+                    <strong>AI recommendation</strong>
+                    <small>Based on sample data</small>
+                  </div>
                 </div>
-                <span className="orbit orbit-1" aria-hidden="true">
-                  <i className="sat s1" />
-                </span>
-                <span className="orbit orbit-2" aria-hidden="true">
-                  <i className="sat s2" />
-                  <i className="sat s3" />
-                </span>
-                <span className="orbit orbit-3" aria-hidden="true" />
+                <p>Revise Deadlock Prevention — 20 min drill suggested.</p>
+              </div>
 
-                <div className="float-card fc-quiz">
-                  <div className="fc-head">
-                    <span className="fc-icon">
-                      <HiOutlineLightningBolt size={15} />
-                    </span>
-                    <div>
-                      <strong>OS Quiz · Q3/10</strong>
-                      <small>Process Scheduling</small>
-                    </div>
-                    <span className="fc-live">
-                      <i /> Live
-                    </span>
-                  </div>
-                  <p>Which algorithm avoids deadlock?</p>
-                  <div className="fc-opts">
-                    <span>Round Robin</span>
-                    <span className="ok">Banker&apos;s ✓</span>
-                  </div>
-                  <div className="fc-progress">
-                    <i style={{ width: "30%" }} />
+              <div className="ex-float ex-fc-plan">
+                <div className="ex-fc-head">
+                  <span className="ex-fc-icon cyan">
+                    <HiOutlineCalendar size={14} />
+                  </span>
+                  <div>
+                    <strong>Today&apos;s plan</strong>
+                    <small>3 tasks · 90 min</small>
                   </div>
                 </div>
-
-                <div className="float-card fc-analytics">
-                  <div className="fc-head">
-                    <span className="fc-icon cyan">
-                      <HiOutlineTrendingUp size={15} />
-                    </span>
-                    <div>
-                      <strong>Accuracy 78%</strong>
-                      <small>Last 7 sessions</small>
-                    </div>
-                  </div>
-                  <div className="fc-bars" aria-hidden="true">
-                    {[42, 58, 50, 66, 60, 74, 78].map((h, i) => (
-                      <i key={i} style={{ height: `${h}%` }} />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="float-card fc-plan">
-                  <div className="fc-head">
-                    <span className="fc-icon violet">
-                      <HiOutlineCalendar size={15} />
-                    </span>
-                    <div>
-                      <strong>Today&apos;s plan</strong>
-                      <small>3 tasks · 90 min</small>
-                    </div>
-                  </div>
-                  <ul>
-                    <li>
-                      <HiOutlineCheckCircle size={14} /> Revise B+ Trees
-                    </li>
-                    <li>
-                      <HiOutlineClock size={14} /> DBMS quiz · 25 min
-                    </li>
-                  </ul>
-                </div>
+                <ul>
+                  <li>
+                    <HiOutlineCheckCircle size={14} /> Revise B+ Trees
+                  </li>
+                  <li>
+                    <HiOutlineClock size={14} /> DBMS quiz · 25 min
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ══ PLATFORM PREVIEW ══ */}
-        <section className="ex-preview" id="preview" aria-label="Platform preview">
+        {/* ══ PRODUCT PREVIEW ══ */}
+        <section
+          className="ex-preview"
+          id="preview"
+          aria-label="Platform preview"
+        >
           <div className="ex-section-head rv-up">
             <p className="ex-kicker">Platform preview</p>
-            <h2>One workspace for your entire preparation</h2>
+            <h2>Your preparation, beautifully organized</h2>
             <p>
-              A preview of the ExamIQ dashboard — illustrative sample data, not
-              live user data.
+              A preview of the ExamIQ dashboard with sample data for
+              illustration — not live user information.
             </p>
           </div>
 
@@ -380,13 +401,13 @@ const Home = () => {
               <i />
               <i />
               <i />
-              <span>app.examiq.io/dashboard — preview</span>
+              <span>app.examiq.io/dashboard — sample preview</span>
             </div>
             <div className="ex-window-body">
               <div className="ex-dash-main">
                 <div className="ex-dash-row">
                   <div className="ex-metric">
-                    <small>Study progress</small>
+                    <small>Overall progress</small>
                     <strong>68%</strong>
                     <div className="ex-meter">
                       <i style={{ width: "68%" }} />
@@ -395,29 +416,26 @@ const Home = () => {
                   <div className="ex-metric">
                     <small>Quiz accuracy</small>
                     <strong>78%</strong>
-                    <div className="ex-meter cyan">
+                    <div className="ex-meter">
                       <i style={{ width: "78%" }} />
                     </div>
                   </div>
                   <div className="ex-metric">
-                    <small>Day streak</small>
-                    <strong>12 days</strong>
-                    <div className="ex-meter violet">
-                      <i style={{ width: "55%" }} />
+                    <small>Study goals</small>
+                    <strong>5/7</strong>
+                    <div className="ex-meter">
+                      <i style={{ width: "71%" }} />
                     </div>
                   </div>
                 </div>
 
-                <div className="ex-dash-subject">
+                <div className="ex-panel">
                   <h3>Subject-wise performance</h3>
-                  {DASH_SUBJECTS.map((s) => (
+                  {SUBJECTS.map((s) => (
                     <div className="ex-sub-row" key={s.name}>
                       <span>{s.name}</span>
                       <div className="ex-meter sm">
-                        <i
-                          className={`tone-${s.tone}`}
-                          style={{ width: `${s.pct}%` }}
-                        />
+                        <i style={{ width: `${s.pct}%` }} />
                       </div>
                       <b>{s.pct}%</b>
                     </div>
@@ -426,34 +444,25 @@ const Home = () => {
               </div>
 
               <aside className="ex-dash-side">
-                <div className="ex-side-card">
+                <div className="ex-panel">
                   <h3>
-                    <HiOutlineClock size={15} /> Upcoming tasks
+                    <HiOutlineClock size={15} /> Recent activity
                   </h3>
-                  <ul>
-                    <li>Revise Normalization — 30 min</li>
-                    <li>CN practice set — 20 questions</li>
-                    <li>OS mock quiz — tomorrow</li>
-                  </ul>
-                </div>
-                <div className="ex-side-card warn">
-                  <h3>
-                    <HiOutlineEye size={15} /> Weak-topic insights
-                  </h3>
-                  <ul>
-                    <li>Deadlock Prevention — revise</li>
-                    <li>SQL Joins — practice more</li>
-                  </ul>
-                  <small>Sample insights for illustration.</small>
-                </div>
-                <div className="ex-side-card">
-                  <h3>
-                    <HiOutlineBookOpen size={15} /> Recent activity
-                  </h3>
-                  <ul>
+                  <ul className="ex-list">
                     <li>DBMS Quiz · 8/10</li>
                     <li>OS Notes → 5 questions</li>
+                    <li>CN practice set completed</li>
                   </ul>
+                </div>
+                <div className="ex-panel tint">
+                  <h3>
+                    <HiOutlineEye size={15} /> Suggested revision
+                  </h3>
+                  <ul className="ex-list">
+                    <li>Deadlock Prevention</li>
+                    <li>SQL Normalization</li>
+                  </ul>
+                  <small>Sample suggestions for illustration.</small>
                 </div>
               </aside>
             </div>
@@ -464,10 +473,10 @@ const Home = () => {
         <section className="ex-features" id="features" aria-label="Features">
           <div className="ex-section-head rv-up">
             <p className="ex-kicker">Features</p>
-            <h2>Everything You Need to Prepare with Confidence</h2>
+            <h2>Everything You Need to Prepare Better</h2>
             <p>
-              One intelligent workspace for more focused, personalized exam
-              preparation.
+              Powerful study tools designed to help you learn efficiently and
+              approach exams with confidence.
             </p>
           </div>
           <div className="ex-feature-grid">
@@ -477,11 +486,10 @@ const Home = () => {
                 <article
                   className="ex-feature rv-up"
                   key={f.title}
-                  style={{ transitionDelay: `${(i % 3) * 90}ms` }}
+                  style={{ transitionDelay: `${(i % 3) * 80}ms` }}
                 >
-                  <span className="ex-feature-glow" aria-hidden="true" />
                   <span className="ex-feature-icon">
-                    <Icon size={22} aria-hidden="true" />
+                    <Icon size={21} aria-hidden="true" />
                   </span>
                   <h3>{f.title}</h3>
                   <p>{f.desc}</p>
@@ -495,7 +503,7 @@ const Home = () => {
         <section className="ex-how" id="how" aria-label="How it works">
           <div className="ex-section-head rv-up">
             <p className="ex-kicker">How it works</p>
-            <h2>From goal to exam-ready in three steps</h2>
+            <h2>From goals to exam-ready in three steps</h2>
           </div>
           <div className="ex-steps">
             <span className="ex-steps-line" aria-hidden="true">
@@ -505,8 +513,8 @@ const Home = () => {
               {
                 n: "01",
                 icon: HiOutlineFlag,
-                t: "Set Your Goal",
-                d: "Choose subjects, topics, and your preparation priorities.",
+                t: "Set Your Goals",
+                d: "Choose your subjects, topics, and preparation priorities.",
               },
               {
                 n: "02",
@@ -517,8 +525,8 @@ const Home = () => {
               {
                 n: "03",
                 icon: HiOutlineTrendingUp,
-                t: "Analyze and Improve",
-                d: "Review your performance, identify weak areas, and refine your study plan.",
+                t: "Learn and Improve",
+                d: "Review performance, discover weak areas, and refine your study strategy.",
               },
             ].map((s, i) => {
               const Icon = s.icon;
@@ -526,11 +534,11 @@ const Home = () => {
                 <article
                   className="ex-step rv-up"
                   key={s.n}
-                  style={{ transitionDelay: `${i * 110}ms` }}
+                  style={{ transitionDelay: `${i * 100}ms` }}
                 >
                   <span className="ex-step-num">{s.n}</span>
                   <span className="ex-step-icon">
-                    <Icon size={24} aria-hidden="true" />
+                    <Icon size={22} aria-hidden="true" />
                   </span>
                   <h3>{s.t}</h3>
                   <p>{s.d}</p>
@@ -544,12 +552,12 @@ const Home = () => {
         <section className="ex-split" id="pdf" aria-label="Smart PDF learning">
           <div className="ex-split-inner">
             <div className="ex-split-copy rv-left">
-              <p className="ex-kicker">Smart PDF learning</p>
-              <h2>Your Study Material. Your Personal Practice Set.</h2>
+              <p className="ex-kicker">Smart study tools</p>
+              <h2>Turn Your Notes Into Better Practice.</h2>
               <p>
                 Upload lecture slides or notes and get exam-style questions
-                generated from your own content. Illustrative demo below — the
-                full flow lives inside the app after login.
+                generated from your own content. The preview below is an
+                illustrative demo — the full experience lives inside the app.
               </p>
               <ul className="ex-checks">
                 <li>
@@ -561,21 +569,21 @@ const Home = () => {
                   syllabus topics
                 </li>
                 <li>
-                  <HiOutlineCheckCircle size={17} /> Explanations that show why
-                  answers are correct
+                  <HiOutlineCheckCircle size={17} /> Clear explanations for
+                  every answer
                 </li>
               </ul>
-              <Link
-                to="/register"
-                className="ex-btn-primary btn-anim btn-shine"
-              >
+              <Link to="/register" className="ex-btn-primary btn-anim">
                 <span className="btn-label">Try PDF Learning</span>
                 <span className="btn-arrow" aria-hidden="true">
                   →
                 </span>
               </Link>
             </div>
-            <div className="ex-split-visual rv-right" aria-label="Document to questions demo">
+            <div
+              className="ex-split-visual rv-right"
+              aria-label="Document to questions demo"
+            >
               <div className="ex-doc-flow">
                 <div className="ex-doc">
                   <span className="ex-doc-icon">
@@ -583,7 +591,10 @@ const Home = () => {
                   </span>
                   <strong>OS-Notes.pdf</strong>
                   <small>2.4 MB · uploaded</small>
-                  <div className="ex-doc-scan" aria-hidden="true" />
+                  <span className="ex-doc-status">
+                    <i className="spin" aria-hidden="true" />
+                    Reading key topics…
+                  </span>
                 </div>
                 <span className="ex-doc-arrow" aria-hidden="true">
                   →
@@ -591,7 +602,7 @@ const Home = () => {
                 <div className="ex-gen">
                   <div className="ex-gen-head">
                     <strong>Generated practice set</strong>
-                    <small>3 questions · sample</small>
+                    <small>Sample · 3 questions</small>
                   </div>
                   <div className="ex-gen-q">
                     <p>What is the purpose of process scheduling?</p>
@@ -614,19 +625,23 @@ const Home = () => {
         </section>
 
         {/* ══ INSIGHTS SHOWCASE ══ */}
-        <section className="ex-insights" id="insights" aria-label="Personalized insights">
+        <section
+          className="ex-insights"
+          id="insights"
+          aria-label="Performance insights"
+        >
           <div className="ex-section-head rv-up">
-            <p className="ex-kicker">Personalized insights</p>
-            <h2>Know What to Study Next.</h2>
+            <p className="ex-kicker">Performance insights</p>
+            <h2>Know What to Focus on Next.</h2>
             <p>
-              Performance data helps you focus preparation where it counts.
-              Cards below show illustrative sample data.
+              Clean, sample visualizations that show how performance data can
+              guide your next session. Illustrative data only.
             </p>
           </div>
           <div className="ex-insight-grid">
             <article className="ex-insight rv-up">
               <h3>
-                <HiOutlineBookOpen size={16} /> Subject performance
+                <HiOutlineBookOpen size={16} /> Subject-level accuracy
               </h3>
               <div className="ex-ring-row">
                 <span className="ex-ring" style={{ "--p": "82%" }}>
@@ -649,24 +664,32 @@ const Home = () => {
             </article>
             <article
               className="ex-insight rv-up"
-              style={{ transitionDelay: "90ms" }}
+              style={{ transitionDelay: "80ms" }}
             >
               <h3>
-                <HiOutlineTrendingUp size={16} /> Accuracy trend
+                <HiOutlineTrendingUp size={16} /> Progress over time
               </h3>
-              <div className="ex-trend" aria-hidden="true">
-                {[38, 46, 44, 56, 60, 66, 74].map((h, i) => (
-                  <i key={i} style={{ height: `${h}%` }} />
-                ))}
-              </div>
-              <p className="ex-insight-note">+16 pts over 3 weeks · sample</p>
+              <svg
+                className="ex-spark"
+                viewBox="0 0 200 70"
+                role="img"
+                aria-label="Sample accuracy trend rising over time"
+              >
+                <path
+                  className="ex-spark-line"
+                  d="M4 58 C 34 54, 48 46, 72 44 S 120 34, 144 24 S 182 16, 196 10"
+                  fill="none"
+                />
+                <circle cx="196" cy="10" r="4" className="ex-spark-dot" />
+              </svg>
+              <p className="ex-insight-note">Sample trend · +16 pts</p>
             </article>
             <article
               className="ex-insight rv-up"
-              style={{ transitionDelay: "180ms" }}
+              style={{ transitionDelay: "160ms" }}
             >
               <h3>
-                <HiOutlineEye size={16} /> Topics to revise
+                <HiOutlineEye size={16} /> Topics needing revision
               </h3>
               <ul className="ex-revise">
                 <li>
@@ -685,14 +708,14 @@ const Home = () => {
             </article>
             <article
               className="ex-insight rv-up"
-              style={{ transitionDelay: "270ms" }}
+              style={{ transitionDelay: "240ms" }}
             >
               <h3>
-                <HiOutlineCalendar size={16} /> Next session
+                <HiOutlineCalendar size={16} /> Suggested next session
               </h3>
               <div className="ex-next">
                 <strong>DBMS · Normalization drill</strong>
-                <small>20 questions · ~25 min · recommended sample</small>
+                <small>20 questions · ~25 min · sample suggestion</small>
                 <Link to="/register" className="ex-mini-btn btn-anim">
                   Start session →
                 </Link>
@@ -713,15 +736,15 @@ const Home = () => {
               <p className="ex-kicker">01 · Focus</p>
               <h3>Focus on What Matters</h3>
               <p>
-                Spend more time improving weak topics instead of re-reading
-                what you already know. Every session points to the next
-                highest-value material.
+                Identify the topics that deserve more attention, instead of
+                re-reading what you already know. Every session points to the
+                next highest-value material.
               </p>
             </div>
             <div className="ex-benefit-visual" aria-hidden="true">
               <div className="ex-bv-card">
                 <HiOutlineSearch size={20} />
-                <strong>Weak topics found: 3</strong>
+                <strong>3 topics flagged</strong>
                 <span>Deadlock · Joins · Subnetting</span>
               </div>
             </div>
@@ -730,28 +753,29 @@ const Home = () => {
           <div className="ex-benefit flip rv-right">
             <div className="ex-benefit-copy">
               <p className="ex-kicker">02 · Clarity</p>
-              <h3>Make Progress Visible</h3>
+              <h3>See Your Progress Clearly</h3>
               <p>
-                Understand performance through meaningful analytics — accuracy
-                trends, subject mastery, and streaks that show real momentum.
+                Understand your preparation through useful performance
+                insights — accuracy trends, subject mastery, and streaks that
+                show real momentum.
               </p>
             </div>
-            <div className="ex-benefit-visual" aria-hidden="true">
+            <div className="ex-benefit-visual alt" aria-hidden="true">
               <div className="ex-bv-card">
                 <HiOutlineChartBar size={20} />
                 <strong>Accuracy 62% → 78%</strong>
-                <span>Last 14 sessions</span>
+                <span>Sample · last 14 sessions</span>
               </div>
             </div>
           </div>
 
           <div className="ex-benefit rv-left">
             <div className="ex-benefit-copy">
-              <p className="ex-kicker">03 · Consistency</p>
-              <h3>Build Consistent Habits</h3>
+              <p className="ex-kicker">03 · Habits</p>
+              <h3>Build Better Study Habits</h3>
               <p>
-                Use structured study plans to stay organized — short daily
-                sessions that compound into exam confidence.
+                Follow a structured approach to exam preparation — short daily
+                sessions that compound into genuine exam confidence.
               </p>
             </div>
             <div className="ex-benefit-visual" aria-hidden="true">
@@ -766,17 +790,16 @@ const Home = () => {
 
         {/* ══ FINAL CTA ══ */}
         <section className="ex-final rv-scale" aria-label="Get started">
-          <div className="ex-final-bg" aria-hidden="true">
-            <span className="orb orb-c" />
-            <span className="particle p2" />
-            <span className="particle p4" />
-          </div>
-          <h2>Make Your Next Study Session Count.</h2>
+          <h2>Your Next Exam Starts with a Better Plan.</h2>
           <p>
-            Start building a more focused exam-preparation routine with ExamIQ.
+            Take control of your preparation with smarter practice and
+            personalized learning insights.
           </p>
           <div className="ex-final-btns">
-            <Link to="/register" className="ex-btn-primary big btn-anim btn-shine">
+            <Link
+              to="/register"
+              className="ex-btn-primary big btn-anim"
+            >
               <span className="btn-label">Get Started Free</span>
               <span className="btn-arrow" aria-hidden="true">
                 →
@@ -794,7 +817,7 @@ const Home = () => {
         <div className="ex-footer-inner">
           <div className="ex-footer-brand">
             <Link to="/" className="ex-brand" aria-label="ExamIQ home">
-              <img src={logo} alt="ExamIQ logo" width="30" height="30" />
+              <img src={logo} alt="ExamIQ logo" width="28" height="28" />
               <span>
                 Exam<em>IQ</em>
               </span>
@@ -803,7 +826,6 @@ const Home = () => {
               AI-powered exam preparation and personalized learning for
               focused, confident students.
             </p>
-            <p className="ex-tagline">Prepare Smarter. Perform Better.</p>
           </div>
           <nav className="ex-footer-nav" aria-label="Footer">
             <div>
