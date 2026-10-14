@@ -1,291 +1,291 @@
-# 🎓 ExamIQ — AI-Powered Exam Preparation & Learning Platform
+<div align="center">
 
-<p align="center">
-  <img src="frontend/src/assets/logo.png" alt="ExamIQ Logo" width="120" />
-</p>
+<img src="frontend/src/assets/logo.png" alt="ExamIQ Logo" width="110" />
 
-<p align="center">
-  <b>Transform your study materials into interactive quizzes, deep concept breakdowns, and targeted exam intelligence.</b>
-</p>
+# ExamIQ
 
-<p align="center">
-  <a href="https://github.com/Patelprince6064/ExamIQ/stargazers"><img src="https://img.shields.io/github/stars/Patelprince6064/ExamIQ?style=for-the-badge&color=blue" alt="Stars"></a>
-  <a href="https://github.com/Patelprince6064/ExamIQ/network/members"><img src="https://img.shields.io/github/forks/Patelprince6064/ExamIQ?style=for-the-badge&color=green" alt="Forks"></a>
-  <a href="https://github.com/Patelprince6064/ExamIQ/issues"><img src="https://img.shields.io/github/issues/Patelprince6064/ExamIQ?style=for-the-badge&color=red" alt="Issues"></a>
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/badge/Node.js-v18+-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node">
-  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React">
-  <img src="https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB">
-</p>
+### Your AI Exam Coach — *Prepare Smarter. Achieve More.*
 
----
+Turn PDFs into practice quizzes · Decode past papers · Chat with an AI tutor ·
+Find your weak topics before the examiner does.
 
-## 📌 Table of Contents
+[![Stars](https://img.shields.io/github/stars/Patelprince6064/ExamIQ?style=for-the-badge&color=2563eb)](https://github.com/Patelprince6064/ExamIQ/stargazers)
+[![Forks](https://img.shields.io/github/forks/Patelprince6064/ExamIQ?style=for-the-badge&color=16a34a)](https://github.com/Patelprince6064/ExamIQ/network/members)
+[![Issues](https://img.shields.io/github/issues/Patelprince6064/ExamIQ?style=for-the-badge&color=ef4444)](https://github.com/Patelprince6064/ExamIQ/issues)
+[![License: MIT](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Architecture & Tech Stack](#-architecture--tech-stack)
-- [Project Directory Structure](#-project-directory-structure)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation & Setup](#installation--setup)
-  - [Environment Variables](#environment-variables)
-  - [Running Locally](#running-locally)
-- [API Reference](#-api-reference)
-- [Screenshots](#-screenshots)
-- [Author & Acknowledgements](#-author--acknowledgements)
-- [License](#-license)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Node 18+](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose_8-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Express](https://img.shields.io/badge/Express-4-black?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+
+[Features](#-what-examiq-does) · [Live Tour](#-the-30-second-tour) · [Quickstart](#-quickstart) · [API](#-api-reference) · [Architecture](#-how-it-works) · [Roadmap](#-roadmap)
+
+</div>
 
 ---
 
-## 📖 Overview
+## 🎯 The problem with studying
 
-**ExamIQ** is an end-to-end intelligent study companion engineered to help students study smarter, identify weak concepts rapidly, and maximize exam scores. 
+Students drown in PDFs, reread the same notes five times, and discover their weak
+topics **in the exam hall**. ExamIQ flips that: upload what you have, practice like
+it's exam day, and let AI show you exactly what to fix — while there's still time.
 
-Instead of passively reading static PDFs or textbook notes, ExamIQ allows students to:
-1. **Upload study notes and past exam papers (up to 50 MB)**.
-2. **Automatically generate structured quizzes and descriptive questions**.
-3. **Analyze past year question papers** to highlight high-frequency questions and optimal model solutions.
-4. **Interact with a domain-specialized AI Tutor** for deep, step-by-step conceptual explanations without confusing formatting artifacts.
-5. **Receive Weak Topic Diagnostics** after quizzes to target gaps before real exams.
+## ✨ What ExamIQ does
 
----
+| | Capability | How it helps you |
+|---|---|---|
+| 🤖 | **AI Exam Tutor** | CS-specialized chat (DSA, OS, DBMS, CN, SE) with clean, exam-ready explanations — no markdown clutter |
+| 📄 | **Notes → Quiz** | Upload notes/slides/textbooks (**up to 50 MB**: PDF, PNG, JPG, WebP) and get MCQs with explanations + difficulty tiers |
+| 📑 | **Paper Analyzer** | Extracts high-frequency topics from past papers and generates model answers with scoring points |
+| 🧠 | **Weak-Topic Intelligence** | Replaces bare percentages with diagnostics — *Round Robin Scheduling, B+ Trees, Normalization…* — plus what to revise |
+| 🗺️ | **Study Roadmaps** | Timelines from today to exam day, built around your priorities |
+| 📊 | **Analytics Dashboard** | Accuracy, mastery and streaks via Chart.js + Recharts |
+| ⏱️ | **Focus Timer** | Floating Pomodoro widget that survives page navigation |
+| 🛡️ | **Offline Fallback Engine** | Built-in academic knowledge base keeps the app useful even with zero AI credits |
 
-## ✨ Key Features
-
-### 🤖 1. AI Exam Tutor & Conceptual Assistant
-- **Context-Aware Responses**: Specialized in Computer Science (DSA, Operating Systems, DBMS, Computer Networks, Software Engineering).
-- **Clean Academic Formatting**: Structured paragraphs, bulleted breakdowns, and real-world exam examples.
-- **Zero Raw Markdown Hash Clutter**: Pre-cleaned and styled for readable studying.
-
-### 📄 2. Smart PDF Note Processor & Quiz Generator
-- **Large Document Support**: Supports lecture notes, slides, and textbooks up to **50 MB** (`.pdf`, `.png`, `.jpg`, `.webp`).
-- **Automated Text Extraction**: Integrated with `pdf-parse` and OCR pipelines for document comprehension.
-- **Instant Quiz Creation**: Generates topic-specific multiple-choice assessments with answer explanations and difficulty tiers.
-
-### 📑 3. Past Exam Paper Analyzer
-- **Topic Frequency Extractor**: Analyzes semester and university papers to compute recurring question weights and trends.
-- **Full Exam Paper Solver**: Synthesizes model answers, edge-case analysis, and key scoring points for university-level questions.
-
-### 🧠 4. Weak Topic Intelligence & Diagnostics
-- **Targeted Feedback Engine**: Replaces generic score percentages with diagnostic feedback on specific weak areas (e.g., *Round Robin Scheduling*, *Deadlock Prevention*, *B+ Trees*, *SQL Normalization*).
-- **Curated Action Steps**: Suggests specific practice exercises and conceptual reviews based on missed questions.
-
-### ⏱️ 5. Integrated Focus Study Timer
-- **Pomodoro & Custom Timer**: Persistent floating widget allowing timed study sprints across all pages without losing state.
-
-### 📊 6. Analytics & Goal Tracking
-- **Interactive Dashboards**: Visualizes quiz accuracy, topic mastery, and completion rates.
-- **Revision Roadmaps**: Generates structured timelines leading up to exam dates.
-
-### 🛡️ 7. Offline Intelligence Fallback Engine
-- Zero downtime guarantee: Built-in local academic intelligence generators ensure the application remains fully functional even without external AI API credits.
-
----
-
-## 🏗️ Architecture & Tech Stack
+## ⚡ The 30-second tour
 
 ```mermaid
-graph TD
-    Client[React.js Frontend UI] <-->|REST API / JWT| Server[Node.js + Express Backend]
-    Server <-->|Mongoose ODM| DB[(MongoDB Database)]
-    Server <-->|OCR & Parsing| PDFEngine[pdf-parse / Multer (50MB)]
-    Server <-->|AI Prompts & Fallback| AI[Groq Llama 3 / Offline Academic Engine]
+journey
+    title From syllabus to exam-ready
+    section Prepare
+      Upload notes or past paper: 5: You
+      AI generates your quiz: 5: ExamIQ
+    section Practice
+      Attempt timed questions: 4: You
+      Get weak-topic diagnosis: 5: ExamIQ
+    section Perform
+      Follow your roadmap: 4: You
+      Walk in confident: 5: You
 ```
 
-### **Frontend**
-- **Framework**: React 18 (SPA)
-- **Styling**: Modern Vanilla CSS, responsive layouts, glassmorphic UI, custom icons
-- **State & Routing**: React Router v6, Context API (Timer, Authentication)
-- **Visuals**: Chart.js / Recharts for student performance visualization
-
-### **Backend**
-- **Runtime**: Node.js
-- **Web Framework**: Express.js
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JSON Web Tokens (JWT) & bcryptjs password hashing
-- **File Ingestion**: Multer (50 MB cap), `pdf-parse`
-- **Security**: CORS, Helmet headers, express-rate-limit
+1. **Land** on a cinematic home page — interactive dotted globe, blur-to-sharp
+   headline reveals, student-stories marquee.
+2. **Upload** a PDF in *PDF Upload* (or a past paper in *Paper Analyzer*).
+3. **Practice** in *AI Practice* — MCQs, descriptive answers, instant feedback.
+4. **Diagnose** in *Analytics* — see the 3 topics costing you marks.
+5. **Execute** your *Roadmap* — day-by-day plan to exam day.
 
 ---
 
-## 📂 Project Directory Structure
+## 🧱 Tech stack
 
-```plaintext
+| Layer | Choices |
+|---|---|
+| **Frontend** | React 19 · React Router v7 · Vanilla CSS (glassmorphism, responsive) · Chart.js + Recharts · `cobe` WebGL globe · `react-icons` |
+| **Backend** | Node.js 18+ · Express 4 · Mongoose 8 · JWT + bcryptjs · Multer (50 MB) · `pdf-parse` + Tesseract OCR |
+| **AI** | Groq `llama-3.1-8b-instant` with an **offline academic fallback engine** (works without API keys) |
+| **Hardening** | Helmet headers · CORS · express-rate-limit (global + stricter AI limits) · Morgan logging |
+| **Deploy** | Vercel (frontend) + Render/serverless (backend) — see [DEPLOYMENT.md](DEPLOYMENT.md) |
+
+## 🏗️ How it works
+
+```mermaid
+graph LR
+    UI[React 19 SPA<br/>pages · components · context] <-->|REST + JWT| API[Express 4 API<br/>8 route groups]
+    API <-->|Mongoose 8| DB[(MongoDB)]
+    API <-->|pdf-parse · Tesseract<br/>Multer 50 MB| FILES[Notes & Papers]
+    API <-->|Groq Llama 3.1<br/>+ offline fallback| AI[AI Engine]
+```
+
+### 📂 Project structure
+
+```
 ExamIQ/
-├── backend/
-│   ├── config/
-│   │   ├── aiFallback.js      # Offline high-yield academic knowledge generator
-│   │   └── db.js              # MongoDB connection configuration
-│   ├── middleware/
-│   │   ├── auth.js            # JWT verification & route protection
-│   │   └── upload.js          # Multer 50MB file upload & MIME filter
-│   ├── models/
-│   │   ├── Note.js            # Uploaded PDF metadata & extracted text schema
-│   │   ├── QuizResult.js      # Student quiz scores, weak topics & answers
-│   │   └── User.js            # User profile, goals & authentication schema
-│   ├── routes/
-│   │   ├── analytics.js       # Student performance metrics & streaks
-│   │   ├── auth.js            # User register, login & profile endpoints
-│   │   ├── chat.js            # AI Tutor conversation & doubt clearance
-│   │   ├── paper.js           # Past exam paper analyzer & solver
-│   │   ├── progress.js        # Study roadmap & progress tracking
-│   │   ├── quiz.js            # Dynamic quiz generation & weak topic diagnostics
-│   │   └── user.js            # Note upload & PDF-to-quiz generation
-│   ├── .env.example           # Backend environment variable template
-│   ├── server.js              # Main Express application entry point
-│   └── package.json
-│
-├── frontend/
-│   ├── public/
-│   │   └── index.html         # HTML shell & web assets
-│   ├── src/
-│   │   ├── assets/            # Project graphics & branding
-│   │   ├── home/              # Landing page component & styles
-│   │   ├── AIPractice.js      # Quiz practice & assessment interface
-│   │   ├── Analytics.js       # Charts & study insights dashboard
-│   │   ├── App.js             # Client routing & protected routes
-│   │   ├── Dashboard.js       # Main student dashboard
-│   │   ├── PaperAnalyzer.js   # Exam paper upload & topic extraction
-│   │   ├── PdfUpload.js       # Note management & question generator
-│   │   ├── Roadmap.js         # Study planner & roadmap timeline
-│   │   ├── TimerWidget.js     # Floating focus study timer
-│   │   └── api.js             # Centralized Axios / Fetch API client
-│   └── package.json
-│
-├── .gitignore
-├── README.md
-├── SETUP.md
-└── start-all.bat              # One-click Windows runner script
+├── frontend/                      # React 19 SPA (proxy → localhost:5000)
+│   ├── public/                    # index.html, favicon, _redirects
+│   └── src/
+│       ├── App.js / index.js      # Router (v7) + entry point
+│       ├── assets/                # logo, hero art (only what's used)
+│       ├── pages/                 # One file + CSS per screen:
+│       │                         # Home, Dashboard, AIPractice, Subjects,
+│       │                         # Analytics, Settings, PdfUpload,
+│       │                         # PaperAnalyzer, Roadmap, Login, Register
+│       ├── components/
+│       │   ├── landing/           # DottedGlobe, TextReveal, Marquee
+│       │   ├── layout/            # SharedSidebar shell
+│       │   └── timer/             # Floating focus timer
+│       ├── context/               # TimerContext (global timer state)
+│       ├── services/              # api.js — single API client (auth + calls)
+│       └── *.css                  # App + global styles
+├── backend/                       # Express API (port 5000)
+│   ├── server.js                  # App entry (also serverless-safe export)
+│   ├── api/index.js               # Serverless wrapper (Vercel)
+│   ├── config/                    # db.js, aiFallback.js (offline brain)
+│   ├── middleware/                # auth.js (JWT), upload.js (Multer 50MB)
+│   ├── models/                    # User, Note, QuizResult
+│   ├── routes/                    # auth, chat, quiz, paper, subjects,
+│   │                              # analytics, progress, user
+│   └── .env.example               # Copy to .env to configure
+├── DEPLOYMENT.md / SETUP.md       # Render + Vercel guides
+├── start-all.bat                  # One-click Windows launcher
+└── README.md                      # You are here 👋
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quickstart
 
 ### Prerequisites
-Make sure the following are installed on your machine:
-- [Node.js](https://nodejs.org/) (v18.x or later)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-- [MongoDB Community Server](https://www.mongodb.com/try/download/community) running locally on port `27017` (or MongoDB Atlas connection string)
-- [Git](https://git-scm.com/)
 
----
+- [Node.js](https://nodejs.org/) **18+** · npm · [Git](https://git-scm.com/)
+- [MongoDB](https://www.mongodb.com/try/download/community) locally (`27017`)
+  **or** a free [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) connection string
 
-### Installation & Setup
+### 1️⃣ Clone
 
-#### 1. Clone the Repository
 ```bash
 git clone https://github.com/Patelprince6064/ExamIQ.git
 cd ExamIQ
 ```
 
-#### 2. Backend Setup
+### 2️⃣ Backend
+
 ```bash
 cd backend
 npm install
+cp .env.example .env   # Windows: copy .env.example .env
 ```
 
-Create a `.env` file in the `backend/` directory:
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/ai-exam-prep
-JWT_SECRET=your_jwt_secret_key_here
-JWT_EXPIRES_IN=7d
-CLIENT_URL=http://localhost:3000
-GROQ_API_KEY=your_optional_groq_api_key
-```
+| Variable | Required | What it does |
+|---|---|---|
+| `PORT` | No (default `5000`) | API port |
+| `MONGO_URI` | ✅ | `mongodb://localhost:27017/ai-exam-prep` or Atlas SRV string |
+| `JWT_SECRET` | ✅ | Long random string for signing tokens |
+| `JWT_EXPIRES_IN` | No (default `7d`) | Token lifetime |
+| `CLIENT_URL` | No | Frontend origin (`http://localhost:3000`) |
+| `GROQ_API_KEY` | No | Enables live Llama 3.1; **offline engine covers you without it** |
 
-#### 3. Frontend Setup
+### 3️⃣ Frontend
+
 ```bash
 cd ../frontend
 npm install
 ```
 
----
+### 4️⃣ Run
 
-### Running Locally
-
-You can launch both services using your terminal:
-
-**Terminal 1 (Backend Server):**
-```bash
-cd backend
-npm start
-# Server runs on http://localhost:5000
-```
-
-**Terminal 2 (Frontend Client):**
-```bash
-cd frontend
-npm start
-# Application opens at http://localhost:3000
-```
-
-*On Windows, you can also double-click `start-all.bat` to launch both servers simultaneously.*
-
----
-
-## 📡 API Reference
-
-### 🔐 Authentication (`/api/auth`)
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | Register a new student account | ❌ No |
-| `POST` | `/api/auth/login` | Authenticate user & receive JWT | ❌ No |
-| `GET` | `/api/auth/me` | Fetch active user profile | ✅ Yes |
-
-### 🤖 AI Tutor & Chat (`/api/chat`)
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/chat` | Ask academic questions & receive structured explanations | ✅ Yes |
-
-### 📝 Notes & PDF Quiz Generator (`/api/user`)
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/user/upload-note` | Upload notes / textbooks (up to 50MB) | ✅ Yes |
-| `GET` | `/api/user/notes` | List all user notes | ✅ Yes |
-| `POST` | `/api/user/notes/:id/generate-quiz` | Generate exam quiz directly from uploaded note | ✅ Yes |
-| `DELETE`| `/api/user/notes/:id` | Delete an uploaded note | ✅ Yes |
-
-### 📑 Exam Paper Analyzer (`/api/paper`)
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/paper/analyze` | Extract top exam topics or generate full solutions | ✅ Yes |
-
-### 🧠 Practice & Quiz Engine (`/api/quiz`)
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/quiz/generate` | Generate MCQ questions by subject & difficulty | ✅ Yes |
-| `POST` | `/api/quiz/descriptive` | Generate university-style descriptive questions | ✅ Yes |
-| `POST` | `/api/quiz/submit` | Submit answers & receive Weak Topic Intelligence | ✅ Yes |
-| `GET` | `/api/quiz/history` | Retrieve user quiz attempts & scores | ✅ Yes |
-
----
-
-## 📸 Screenshots
-
-| Feature | Interface Preview |
+| Terminal 1 — API | Terminal 2 — App |
 |---|---|
-| **PDF Note Generator** | Up to 50MB file upload with instant question generation |
-| **Past Paper Analyzer** | High-yield topic frequency extractor & paper solver |
-| **Interactive AI Tutor** | Clean long-form explanations with key exam takeaways |
-| **Diagnostics & Timer** | Weak topic intelligence & floating Pomodoro widget |
+| `cd backend && npm start` → `http://localhost:5000` | `cd frontend && npm start` → `http://localhost:3000` |
+
+> 🪟 **Windows shortcut:** double-click `start-all.bat` (starts MongoDB service + both servers).
+
+### ✅ Smoke test
+
+1. Open `http://localhost:3000` → landing page loads with the globe hero.
+2. Register → log in → dashboard greets you by name.
+3. *AI Practice* → generate a quiz (works **without** `GROQ_API_KEY` via fallback).
+4. `http://localhost:5000` returns `{ status: "✅ AI Exam Prep Backend Running" }`.
 
 ---
 
-## 👨‍💻 Author & Acknowledgements
+## 📡 API reference
 
-**Prince Patel**  
-- **GitHub**: [@Patelprince6064](https://github.com/Patelprince6064)  
-- **Repository**: [https://github.com/Patelprince6064/ExamIQ](https://github.com/Patelprince6064/ExamIQ)  
-- **Email**: pp50646464@gmail.com  
+Base URL `http://localhost:5000`. Send `Authorization: Bearer <JWT>` where marked ✅.
 
-Developed with passion for Educational Technology, AI Engineering, and Full-Stack Web Development.
+### 🔐 Auth — `/api/auth`
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/auth/register` | ❌ | Create account, receive JWT |
+| `POST` | `/api/auth/login` | ❌ | Log in, receive JWT |
+| `GET` | `/api/auth/me` | ✅ | Current user profile |
+
+### 🤖 AI Tutor — `/api/chat` (also `/chat`)
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/chat` | ✅ | Ask anything academic, get structured explanations |
+
+### 📝 Notes & quizzes — `/api/user`
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/user/upload-note` | ✅ | Upload notes/textbook (≤ 50 MB) |
+| `GET` | `/api/user/notes` | ✅ | List your notes |
+| `POST` | `/api/user/notes/:id/generate-quiz` | ✅ | Quiz straight from *your* material |
+| `DELETE` | `/api/user/notes/:id` | ✅ | Delete a note |
+
+### 🧠 Quiz engine — `/api/quiz`
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/quiz/generate` | ✅ | MCQs by subject + difficulty |
+| `POST` | `/api/quiz/descriptive` | ✅ | University-style descriptive questions |
+| `POST` | `/api/quiz/submit` | ✅ | Submit → weak-topic diagnosis |
+| `GET` | `/api/quiz/history` | ✅ | Past attempts & scores |
+
+### 📑 Papers — `/api/paper` · 📚 Subjects — `/api/subjects`
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/paper/analyze` | ✅ | Topic-frequency extraction or full model solutions |
+| `*` | `/api/subjects/...` | ✅ | Subject library & topic management (see [`backend/routes/subjects.js`](backend/routes/subjects.js)) |
+
+### 📊 Analytics — `/api/analytics` · 📈 Progress — `/api/progress`
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `*` | `/api/analytics/...` | ✅ | Accuracy, mastery, streaks (see [`backend/routes/analytics.js`](backend/routes/analytics.js)) |
+| `*` | `/api/progress/...` | ✅ | Roadmaps & study-progress tracking (see [`backend/routes/progress.js`](backend/routes/progress.js)) |
+
+> ⏳ **Rate limits:** 100 req / 15 min globally · 20 AI req / min on `/chat` + `/api/quiz`.
 
 ---
+
+## ❓ FAQ
+
+**Do I need a Groq API key?**
+No. The offline fallback engine generates quizzes, explanations and plans out of the
+box. Add `GROQ_API_KEY` when you want live Llama 3.1 quality.
+
+**Where is my data stored?**
+Your own MongoDB (local or Atlas). Uploads live in `backend/uploads/` (git-ignored);
+PDF text is extracted server-side — nothing is sent anywhere except the AI provider
+you configure.
+
+**Why is the landing page so light?**
+Images were cut, `backdrop-blur` dropped, scroll handling is rAF-throttled and
+offscreen sections use `content-visibility` — it stays at 60 fps on mid-range phones.
+
+**How do I deploy?**
+Follow [DEPLOYMENT.md](DEPLOYMENT.md): backend on Render, frontend on Vercel,
+database on Atlas. `frontend/vercel.json` + `backend/vercel.json` rewrites are
+already wired.
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Spaced-repetition flashcards from weak topics
+- [ ] Timed mock-exam mode with negative marking
+- [ ] Leaderboards & study groups
+- [ ] PWA offline mode + mobile apps
+- [ ] Multi-language explanations
+
+Ideas welcome — open an [issue](https://github.com/Patelprince6064/ExamIQ/issues)!
+
+## 🤝 Contributing
+
+```bash
+git checkout -b feat/my-idea
+# frontend/src/pages/* for screens, components/* for reusable UI,
+# backend/routes/* for endpoints — then open a PR
+```
+
+Small, focused PRs with a before/after note get reviewed fastest. ⭐
+
+## 👨‍💻 Author
+
+**Prince Patel** — passionate about EdTech, AI engineering and full-stack craft.
+
+- GitHub: [@Patelprince6064](https://github.com/Patelprince6064)
+- Repo: [Patelprince6064/ExamIQ](https://github.com/Patelprince6064/ExamIQ)
+- Email: `pp50646464@gmail.com`
 
 ## 📄 License
 
-This project is open-source under the [MIT License](LICENSE).
-Feel free to star ⭐ the repository if you found this project helpful!
+MIT — free to use, fork and build upon. If ExamIQ helps you ace an exam,
+a ⭐ is the cheapest tuition you'll ever pay. Good luck! 🎓
