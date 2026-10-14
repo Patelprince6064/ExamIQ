@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  apiGetSubjects, apiGenerateQuiz, apiSubmitQuiz, apiGenerateDescriptive, apiGetTopicNotes
+  apiGetSubjects, apiGenerateQuiz, apiSubmitQuiz, apiGenerateDescriptive, apiGetTopicNotes,
+  apiQuizHistory, apiWeakTopics,
 } from "../services/api";
 import { SharedSidebar } from "../components/layout/SharedLayout";
 import {
@@ -13,6 +14,11 @@ import {
   HiOutlineChevronRight,
   HiOutlineCheckCircle,
   HiOutlinePlus,
+  HiOutlineSearch,
+  HiOutlineX,
+  HiOutlineArrowRight,
+  HiOutlineSparkles,
+  HiOutlineBookOpen,
 } from "react-icons/hi";
 import "./Subjects.css";
 
@@ -73,6 +79,8 @@ function Subjects() {
   const navigate = useNavigate();
   const [subjects, setSubjects]           = useState([]);
   const [loading, setLoading]             = useState(true);
+  const [history, setHistory]             = useState([]);
+  const [weakTopics, setWeakTopics]       = useState([]);
   const [selected, setSelected]           = useState(null);
   const [section, setSection]             = useState("topics"); // topics | notes | test | video | quiz | result
   const [activeTopic, setActiveTopic]     = useState(null);
@@ -98,6 +106,12 @@ function Subjects() {
   const [newSubjectName, setNewSubjectName]   = useState("");
   const [newSubjectTopics, setNewSubjectTopics] = useState("");
 
+  // Discovery toolbar (subject grid only — real filtering, no fake controls)
+  const [query, setQuery]                 = useState("");
+  const [statusFilter, setStatusFilter]   = useState("all"); // all | progress | fresh
+  const [sortBy, setSortBy]               = useState("name"); // name | practiced | score | recent
+  const [gridIn, setGridIn]               = useState(false);
+
   const [isAddingTopic, setIsAddingTopic]     = useState(false);
   const [newTopicName, setNewTopicName]       = useState("");
 
@@ -106,26 +120,47 @@ function Subjects() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) { navigate("/login"); return; }
-    apiGetSubjects()
-      .then((data) => {
-        const fetched = data.subjects || [];
-        const savedCustom = JSON.parse(localStorage.getItem("custom_subjects_v1") || "[]");
-        const fetchedCodes = new Set(fetched.map((s) => s.code));
-        const customToAppend = savedCustom.filter((cs) => !fetchedCodes.has(cs.code));
-        const savedTopicMap = JSON.parse(localStorage.getItem("custom_topics_map_v1") || "{}");
-        const merged = [...fetched, ...customToAppend].map((s) => {
-          if (savedTopicMap[s.code]) {
-            const existingNames = new Set(s.topics.map((t) => t.name));
-            const newTopics = savedTopicMap[s.code].filter((t) => !existingNames.has(t.name));
-            return { ...s, topics: [...s.topics, ...newTopics] };
-          }
-          return s;
-        });
-        setSubjects(merged);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    let cancelled = false;
+    Promise.allSettled([apiGetSubjects(), apiQuizHistory(20), apiWeakTopics()]).then(
+      ([subRes, histRes, weakRes]) => {
+        if (cancelled) return;
+        if (subRes.status === "fulfilled") {
+          const fetched = subRes.value.subjects || [];
+          const savedCustom = JSON.parse(localStorage.getItem("custom_subjects_v1") || "[]");
+          const fetchedCodes = new Set(fetched.map((s) => s.code));
+          const customToAppend = savedCustom.filter((cs) => !fetchedCodes.has(cs.code));
+          const savedTopicMap = JSON.parse(localStorage.getItem("custom_topics_map_v1") || "{}");
+          const merged = [...fetched, ...customToAppend].map((s) => {
+            if (savedTopicMap[s.code]) {
+              const existingNames = new Set(s.topics.map((t) => t.name));
+              const newTopics = savedTopicMap[s.code].filter((t) => !existingNames.has(t.name));
+              return { ...s, topics: [...s.topics, ...newTopics] };
+            }
+            return s;
+          });
+          setSubjects(merged);
+        } else {
+          console.error(subRes.reason);
+        }
+        if (histRes.status === "fulfilled" && Array.isArray(histRes.value?.results)) {
+          setHistory(histRes.value.results);
+        }
+        if (weakRes.status === "fulfilled" && Array.isArray(weakRes.value?.weakTopics)) {
+          setWeakTopics(weakRes.value.weakTopics);
+        }
+        setLoading(false);
+      }
+    );
+    return () => { cancelled = true; };
   }, [navigate]);
+
+  // Entrance: cards fade-rise once when the grid first appears
+  useEffect(() => {
+    if (loading || selected) return undefined;
+    setGridIn(false);
+    const raf = requestAnimationFrame(() => setGridIn(true));
+    return () => cancelAnimationFrame(raf);
+  }, [loading, selected]);
 
   const handleAddSubject = (e) => {
     e.preventDefault();
@@ -270,6 +305,49 @@ function Subjects() {
 
   const SUBJECT_COLORS = ["#2563eb","#06b6d4","#10b981","#f59e0b","#8b5cf6","#ec4899","#14b8a6","#f97316","#6366f1","#0ea5e9","#a855f7","#ef4444"];
 
+  /* ── Discovery: real search / filter / sort over actual subjects ── */
+  const lastPracticed = {};
+  history.forEach((r) => {
+    if (!r?.subject) return;
+    const t = new Date(r.createdAt).getTime();
+    if (!lastPracticed[r.subject] || t > lastPracticed[r.subject]) {
+      lastPracticed[r.subject] = t;
+    }
+  });
+
+  const visibleSubjects = subjects
+    .filter((s) => {
+      const q = query.trim().toLowerCase();
+      if (q && !`${s.code} ${s.name}`.toLowerCase().includes(q)) return false;
+      if (statusFilter === "progress" && !(s.quizzesTaken > 0)) return false;
+      if (statusFilter === "fresh" && s.quizzesTaken > 0) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "practiced") return (b.quizzesTaken || 0) - (a.quizzesTaken || 0);
+      if (sortBy === "score") return (b.avgScore || 0) - (a.avgScore || 0);
+      if (sortBy === "recent")
+        return (lastPracticed[b.code] || 0) - (lastPracticed[a.code] || 0);
+      return a.name.localeCompare(b.name);
+    });
+
+  const filtersActive =
+    query.trim() !== "" || statusFilter !== "all" || sortBy !== "name";
+  const resetFilters = () => {
+    setQuery("");
+    setStatusFilter("all");
+    setSortBy("name");
+  };
+
+  // Continue Learning: most recent real quiz → its subject (never fabricated)
+  const lastQuiz = history.length > 0 ? history[0] : null;
+  const featuredSubject = lastQuiz
+    ? subjects.find((s) => s.code === lastQuiz.subject) || null
+    : null;
+
+  // Recommended: weakest real topic (existing weak-topics analysis)
+  const recommendation = weakTopics.length > 0 ? weakTopics[0] : null;
+
   const backToTopics = () => {
     setSection("topics");
     setActiveTopic(null);
@@ -293,9 +371,21 @@ function Subjects() {
       <SharedSidebar />
       <div className="main subjects-main">
         <div className="subjects-header">
-          <div>
-            <h1>Subjects</h1>
-            <p>Select a subject · Choose a topic · Study with Notes, Tests & Videos</p>
+          <div className="subjects-title">
+            <span className="subjects-spark" aria-hidden="true">
+              <HiOutlineSparkles size={18} />
+            </span>
+            <div>
+              <h1>
+                Subjects{" "}
+                {!loading && (
+                  <span className="subjects-count">
+                    {subjects.length} subject{subjects.length === 1 ? "" : "s"}
+                  </span>
+                )}
+              </h1>
+              <p>Explore your subjects, strengthen your concepts, and track your progress.</p>
+            </div>
           </div>
           {selected && (
             <button className="s-back-btn" onClick={() => openSubject(null)}>
@@ -307,24 +397,192 @@ function Subjects() {
         {loading ? (
           <div className="subjects-loading"><div className="loading-ring"></div><p>Loading subjects…</p></div>
         ) : !selected ? (
-          <div className="subject-grid">
-            {subjects.map((s, idx) => (
-              <div key={s.code} className="subject-card" onClick={() => openSubject(s)}>
-                <div className="subject-card-accent" style={{ background: SUBJECT_COLORS[idx % SUBJECT_COLORS.length] }}></div>
-                {badge(s.code)}
-                <div className="subject-code" style={{ color: SUBJECT_COLORS[idx % SUBJECT_COLORS.length] }}>{s.code}</div>
-                <div className="subject-name">{s.name}</div>
-                <div className="subject-stats-row">
-                  <span className="s-stat-pill">{s.quizzesTaken} quizzes</span>
-                  {s.avgScore > 0 && <span className="s-stat-pill green">{s.avgScore}% avg</span>}
+          <>
+            {/* ── CONTINUE LEARNING ── */}
+            {featuredSubject && lastQuiz ? (
+              <section className={`sj-featured${gridIn ? " sj-in" : ""}`} aria-label="Continue learning">
+                <span className="sj-featured-icon" aria-hidden="true">
+                  <HiOutlineBookOpen size={22} />
+                </span>
+                <div className="sj-featured-copy">
+                  <p className="sj-eyebrow">Continue learning</p>
+                  <h2>{featuredSubject.name}</h2>
+                  <p>
+                    Last quiz{lastQuiz.topic ? ` on ${lastQuiz.topic}` : ""} — you scored{" "}
+                    <strong>{lastQuiz.score}%</strong>. Pick up right where you left off.
+                  </p>
                 </div>
-                <div className="subject-arrow">Start →</div>
+                <button
+                  className="sj-btn primary"
+                  onClick={() => openSubject(featuredSubject)}
+                >
+                  Continue Learning <HiOutlineArrowRight size={15} aria-hidden="true" />
+                </button>
+              </section>
+            ) : (
+              <section className={`sj-featured sj-welcome${gridIn ? " sj-in" : ""}`} aria-label="Get started">
+                <span className="sj-featured-icon" aria-hidden="true">
+                  <HiOutlineSparkles size={22} />
+                </span>
+                <div className="sj-featured-copy">
+                  <p className="sj-eyebrow">Welcome to your learning space</p>
+                  <h2>Choose a subject to begin your preparation</h2>
+                  <p>Study notes, take quizzes and watch your averages grow here.</p>
+                </div>
+              </section>
+            )}
+
+            {/* ── RECOMMENDED ── */}
+            {recommendation && (
+              <section className={`sj-reco${gridIn ? " sj-in" : ""}`} aria-label="Recommended for you">
+                <span className="sj-reco-icon" aria-hidden="true">
+                  <HiOutlineSparkles size={16} />
+                </span>
+                <p className="sj-reco-text">
+                  <strong>Recommended for you:</strong> revisit{" "}
+                  <strong>{recommendation.topic}</strong>
+                  {recommendation.subject ? ` in ${recommendation.subject}` : ""} ({recommendation.accuracy}%
+                  accuracy) and practise a short quiz to strengthen your understanding.
+                </p>
+                <Link
+                  to="/practice"
+                  state={{
+                    weakTopic: recommendation.topic,
+                    subject: recommendation.subject,
+                  }}
+                  className="sj-reco-btn"
+                >
+                  Practise now <HiOutlineArrowRight size={14} aria-hidden="true" />
+                </Link>
+              </section>
+            )}
+
+            {/* ── DISCOVERY TOOLBAR ── */}
+            <div className={`sj-toolbar${gridIn ? " sj-in" : ""}`} role="search">
+              <div className="sj-search">
+                <HiOutlineSearch size={16} aria-hidden="true" />
+                <input
+                  type="text"
+                  placeholder="Search subjects..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  aria-label="Search subjects"
+                />
+                {query && (
+                  <button
+                    className="sj-clear-q"
+                    onClick={() => setQuery("")}
+                    aria-label="Clear search"
+                    title="Clear search"
+                  >
+                    <HiOutlineX size={14} />
+                  </button>
+                )}
               </div>
-            ))}
+              <div className="sj-filters" role="group" aria-label="Filter subjects">
+                {[
+                  { id: "all", label: "All Subjects" },
+                  { id: "progress", label: "In Progress" },
+                  { id: "fresh", label: "Not Started" },
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    className={`sj-filter${statusFilter === f.id ? " active" : ""}`}
+                    onClick={() => setStatusFilter(f.id)}
+                    aria-pressed={statusFilter === f.id}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+              <select
+                className="sj-sort"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                aria-label="Sort subjects"
+              >
+                <option value="name">Name A–Z</option>
+                <option value="practiced">Most practiced</option>
+                <option value="score">Highest score</option>
+                {history.length > 0 && (
+                  <option value="recent">Recently practiced</option>
+                )}
+              </select>
+              {filtersActive && (
+                <button className="sj-reset" onClick={resetFilters}>
+                  Reset
+                </button>
+              )}
+            </div>
+
+            <div className="subject-grid">
+              {visibleSubjects.map((s, idx) => {
+                const started = s.quizzesTaken > 0;
+                const color = SUBJECT_COLORS[subjects.findIndex((x) => x.code === s.code) % SUBJECT_COLORS.length];
+                return (
+                  <div
+                    key={s.code}
+                    className={`subject-card${gridIn ? " sj-in" : ""}`}
+                    style={{ transitionDelay: gridIn ? `${Math.min(idx, 11) * 45}ms` : "0ms" }}
+                    onClick={() => openSubject(s)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openSubject(s);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`${s.name}: ${s.quizzesTaken} quizzes${s.avgScore > 0 ? `, ${s.avgScore}% average` : ""}. ${started ? "Continue learning" : "Start learning"}`}
+                  >
+                    <div className="subject-card-accent" style={{ background: color }}></div>
+                    {badge(s.code)}
+                    <div className="subject-code" style={{ color }}>{s.code}</div>
+                    <div className="subject-name">{s.name}</div>
+                    <div className="subject-stats-row">
+                      <span className="s-stat-pill">{s.quizzesTaken} quiz{s.quizzesTaken === 1 ? "" : "zes"}</span>
+                      {s.avgScore > 0 && <span className="s-stat-pill green">{s.avgScore}% avg</span>}
+                      {s.topics?.length > 0 && <span className="s-stat-pill">{s.topics.length} topics</span>}
+                    </div>
+                    {started && s.avgScore > 0 && (
+                      <div className="sj-progress" aria-hidden="true">
+                        <div
+                          className="sj-progress-fill"
+                          style={{ width: gridIn ? `${s.avgScore}%` : "0%", background: color }}
+                        />
+                      </div>
+                    )}
+                    <div className="subject-arrow">
+                      {started ? "Continue Learning" : "Start Learning"}
+                      <HiOutlineArrowRight size={14} aria-hidden="true" />
+                    </div>
+                  </div>
+                );
+              })}
+
+              {visibleSubjects.length === 0 && (
+                <div className="sj-no-results">
+                  <p>No subjects match your search</p>
+                  <span>Try a different keyword or reset the filters.</span>
+                  <button className="sj-btn ghost sm" onClick={resetFilters}>Reset filters</button>
+                </div>
+              )}
 
             {/* ADD SUBJECT CARD */}
             {!isAddingSubject ? (
-              <div className="subject-card add-card" onClick={() => setIsAddingSubject(true)}>
+              <div
+                className="subject-card add-card"
+                onClick={() => setIsAddingSubject(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setIsAddingSubject(true);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label="Add a new subject"
+              >
                 <div className="subject-card-accent add-accent"></div>
                 <div className="subject-badge add-badge">
                   <HiOutlinePlus size={24} />
@@ -374,6 +632,7 @@ function Subjects() {
               </div>
             )}
           </div>
+          </>
 
         ) : section === "result" && result ? (
           <div className="result-screen">
