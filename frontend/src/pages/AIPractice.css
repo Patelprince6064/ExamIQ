@@ -5,12 +5,15 @@
 
 .ai-page { background: #f8fafc; }
 
+/* Tutor page owns the full width: hide the global floating timer pill
+   here only (other pages keep it) and let the workspace breathe. */
+.ai-page .timer-fab { display: none; }
+
 .ai-tutor-main {
   flex: 1 1 0;
   min-width: 0;
   min-height: 100vh;
   height: 100dvh;
-  max-width: 1080px;
   padding: 24px 28px 20px;
   display: flex;
   flex-direction: column;
@@ -122,8 +125,6 @@
   gap: 12px;
   flex-wrap: wrap;
   flex-shrink: 0;
-  /* Clear the fixed Set-Timer pill (top:18px right:22px) */
-  padding-right: 168px;
   min-height: 44px;
 }
 .ai-tutor-title {
@@ -789,7 +790,6 @@
 /* ══ RESPONSIVE ══ */
 @media (max-width: 900px) {
   .ai-tutor-main { padding: 16px 12px 16px; height: 100dvh; }
-  .ai-tutor-header { padding-right: 132px; min-height: 0; }
   .ai-modes {
     display: flex;
     overflow-x: auto;
