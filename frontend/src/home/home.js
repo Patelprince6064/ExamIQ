@@ -1,13 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { HiOutlineMail, HiOutlinePhone, HiOutlineAcademicCap, HiOutlineMailOpen } from "react-icons/hi";
+import {
+  HiOutlineSparkles,
+  HiOutlineDocumentText,
+  HiOutlineChartBar,
+  HiOutlineShieldExclamation,
+  HiOutlineCalendar,
+  HiOutlineSearch,
+  HiOutlineCheckCircle,
+  HiOutlineMail,
+  HiOutlinePhone,
+  HiOutlineAcademicCap,
+  HiOutlineClock,
+  HiOutlineTrendingUp,
+  HiOutlineBookOpen,
+  HiOutlineLightningBolt,
+  HiOutlineMenu,
+  HiOutlineX,
+  HiOutlineUpload,
+  HiOutlineFlag,
+  HiOutlineEye,
+} from "react-icons/hi";
 import "./home.css";
 import logo from "../assets/logo.png";
 import circuitBrain from "../assets/circuit-brain.png";
 
+/* ── Scroll-reveal (IntersectionObserver, transform+opacity only) ── */
 const useReveal = () => {
   useEffect(() => {
-    const els = document.querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-up, .reveal-scale");
+    const els = document.querySelectorAll(
+      ".rv-up, .rv-left, .rv-right, .rv-scale, .ex-steps"
+    );
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("in-view"));
+      return undefined;
+    }
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -17,27 +44,97 @@ const useReveal = () => {
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -48px 0px" }
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 };
 
+const NAV_LINKS = [
+  { href: "#features", label: "Features" },
+  { href: "#how", label: "How It Works" },
+  { href: "#benefits", label: "Benefits" },
+  { href: "#contact", label: "Contact" },
+];
+
+const FEATURES = [
+  {
+    icon: HiOutlineSparkles,
+    title: "AI Question Generator",
+    desc: "Generate exam-style questions for your selected topics, tuned to university difficulty.",
+  },
+  {
+    icon: HiOutlineDocumentText,
+    title: "Smart PDF Learning",
+    desc: "Upload study material and generate practice questions directly from your notes.",
+  },
+  {
+    icon: HiOutlineChartBar,
+    title: "Performance Analytics",
+    desc: "Track accuracy, study progress, and subject-level performance in one view.",
+  },
+  {
+    icon: HiOutlineShieldExclamation,
+    title: "Academic Risk Insights",
+    desc: "Analyze available quiz history to identify potential areas of academic risk.",
+  },
+  {
+    icon: HiOutlineCalendar,
+    title: "Adaptive Study Planner",
+    desc: "Organize preparation around weak topics, available time, and exam dates.",
+  },
+  {
+    icon: HiOutlineSearch,
+    title: "Weak Topic Detection",
+    desc: "Discover areas that need additional practice and attention, automatically.",
+  },
+];
+
+const DASH_SUBJECTS = [
+  { name: "Operating Systems", pct: 82, tone: "blue" },
+  { name: "DBMS", pct: 68, tone: "cyan" },
+  { name: "DSA", pct: 74, tone: "violet" },
+  { name: "Networks", pct: 57, tone: "amber" },
+];
+
 const Home = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [active, setActive] = useState("");
+  const year = new Date().getFullYear();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useReveal();
 
-  // Button ripple + magnetic tilt
+  /* Active section highlight */
   useEffect(() => {
-    const handleRipple = (e) => {
+    const ids = ["features", "how", "benefits", "contact"];
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    if (!("IntersectionObserver" in window) || sections.length === 0) return undefined;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(`#${e.target.id}`);
+        });
+      },
+      { rootMargin: "-40% 0px -55% 0px" }
+    );
+    sections.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, []);
+
+  /* Button ripple */
+  useEffect(() => {
+    const onClick = (e) => {
       const btn = e.currentTarget;
       const rect = btn.getBoundingClientRect();
       const ripple = document.createElement("span");
@@ -47,317 +144,699 @@ const Home = () => {
       ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
       ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
       btn.appendChild(ripple);
-      setTimeout(() => ripple.remove(), 650);
+      window.setTimeout(() => ripple.remove(), 650);
     };
     const btns = document.querySelectorAll(".btn-anim");
-    btns.forEach((b) => b.addEventListener("click", handleRipple));
-    return () => btns.forEach((b) => b.removeEventListener("click", handleRipple));
+    btns.forEach((b) => b.addEventListener("click", onClick));
+    return () => btns.forEach((b) => b.removeEventListener("click", onClick));
   }, []);
 
+  /* Lock body scroll when mobile menu open */
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   return (
-    <div className="home">
-
-      {/* TOP NAV */}
-      <div className={`top-nav ${scrolled ? "scrolled" : ""}`}>
-        <Link to="/" className="nav-logo">
-          <img src={logo} alt="ExamIQ Logo" style={{ width: 36, height: 36, borderRadius: 10, objectFit: "cover" }} />
-          <span>ExamIQ</span>
-        </Link>
-        <div className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#how">How it Works</a>
-          <a href="#contact">Contact</a>
-          <Link to="/login" className="login-btn">Login →</Link>
-        </div>
-      </div>
-
-      {/* HERO SECTION */}
-      <section className="hero">
-        <div className="hero-badge">
-          <span className="hero-badge-dot"></span>
-          Final Year AI Project · Built for Students
-        </div>
-
-        <h1>
-          Ace Every Exam with{" "}
-          <span className="highlight">AI-Powered</span>{" "}
-          Preparation
-        </h1>
-
-        <p>
-          Personalized study plans, instant question generation from your PDFs,
-          AI practice sessions — everything you need to succeed.
-        </p>
-
-        <div className="hero-buttons">
-          <Link to="/register" className="btn primary btn-anim btn-shine">
-            <span className="btn-label">Get Started Free</span>
-            <span className="btn-arrow">→</span>
+    <div className="examiq">
+      {/* ══ NAVBAR ══ */}
+      <header className={`ex-nav ${scrolled ? "is-scrolled" : ""}`}>
+        <nav className="ex-nav-inner" aria-label="Primary">
+          <Link to="/" className="ex-brand" aria-label="ExamIQ home">
+            <img src={logo} alt="ExamIQ logo" width="34" height="34" />
+            <span>
+              Exam<em>IQ</em>
+            </span>
           </Link>
-          <Link to="/login" className="btn secondary btn-anim">
-            <span className="btn-label">Login to Dashboard</span>
-            <span className="btn-arrow">→</span>
-          </Link>
-        </div>
 
-        {/* HERO AI CIRCUIT BRAIN GRAPHIC */}
-        <div className="hero-graphic-container">
-          <div className="hero-graphic-glow"></div>
-          <img src={circuitBrain} alt="ExamIQ AI Neural Engine" className="hero-circuit-img" />
-          <div className="hero-graphic-badge badge-top">
-            <span className="badge-pulse"></span> Intelligent Neural Engine Active
-          </div>
-          <div className="hero-graphic-badge badge-bottom">
-            ⚡ Groq LLaMA 3.1 Powered
-          </div>
-        </div>
-
-        <div className="hero-stats">
-          <div className="hero-stat">
-            <div className="hero-stat-value">5+</div>
-            <div className="hero-stat-label">Core Subjects</div>
-          </div>
-          <div className="hero-stat-divider"></div>
-          <div className="hero-stat">
-            <div className="hero-stat-value">AI</div>
-            <div className="hero-stat-label">Powered by Groq</div>
-          </div>
-          <div className="hero-stat-divider"></div>
-          <div className="hero-stat">
-            <div className="hero-stat-value">PDF</div>
-            <div className="hero-stat-label">Smart Upload</div>
-          </div>
-          <div className="hero-stat-divider"></div>
-          <div className="hero-stat">
-            <div className="hero-stat-value">100%</div>
-            <div className="hero-stat-label">Free to Use</div>
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURES SECTION */}
-      <section className="features-section" id="features">
-        <div className="section-header reveal-up">
-          <div className="section-tag">Features</div>
-          <h2>Everything You Need to Prepare</h2>
-          <p>A complete AI-driven toolkit designed to maximize your exam performance and reduce study stress.</p>
-        </div>
-
-        <div className="features-grid">
-          <div className="feature-card reveal-up" style={{ transitionDelay: "0ms" }}>
-            <div className="feature-icon blue">🤖</div>
-            <h3>AI Question Generator</h3>
-            <p>Enter any topic and instantly get exam-style MCQs generated by Groq AI — tailored to CS engineering subjects.</p>
-            <span className="feature-tag">Instant Generation</span>
+          <div className="ex-nav-links" role="menubar">
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                role="menuitem"
+                className={active === l.href ? "is-active" : ""}
+              >
+                {l.label}
+              </a>
+            ))}
           </div>
 
-          <div className="feature-card reveal-up" style={{ transitionDelay: "80ms" }}>
-            <div className="feature-icon cyan">📄</div>
-            <h3>PDF Smart Upload</h3>
-            <p>Upload your lecture notes or textbook PDFs and let the AI generate questions directly from your own study material.</p>
-            <span className="feature-tag">New Feature</span>
+          <div className="ex-nav-cta">
+            <Link to="/login" className="ex-login">
+              Login
+            </Link>
+            <Link to="/register" className="ex-cta btn-anim btn-shine">
+              <span className="btn-label">Get Started</span>
+            </Link>
+            <button
+              className="ex-menu-btn"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              {menuOpen ? <HiOutlineX size={22} /> : <HiOutlineMenu size={22} />}
+            </button>
           </div>
+        </nav>
 
-          <div className="feature-card reveal-up" style={{ transitionDelay: "160ms" }}>
-            <div className="feature-icon green">📊</div>
-            <h3>Performance Analytics</h3>
-            <p>Track accuracy, study hours, streaks, and subject-wise performance with detailed charts and insights.</p>
-            <span className="feature-tag">Real-time Data</span>
-          </div>
-
-          <div className="feature-card reveal-up" style={{ transitionDelay: "0ms" }}>
-            <div className="feature-icon purple">🧠</div>
-            <h3>AI Failure Prediction</h3>
-            <p>Machine learning models analyze your quiz history to identify academic risk and predict exam failure probability.</p>
-            <span className="feature-tag">Smart Insights</span>
-          </div>
-
-          <div className="feature-card reveal-up" style={{ transitionDelay: "80ms" }}>
-            <div className="feature-icon orange">📅</div>
-            <h3>Adaptive Study Planner</h3>
-            <p>Get personalized daily study schedules based on your weak topics, available time, and upcoming exam dates.</p>
-            <span className="feature-tag">Personalized</span>
-          </div>
-
-          <div className="feature-card reveal-up" style={{ transitionDelay: "160ms" }}>
-            <div className="feature-icon red">🚨</div>
-            <h3>Weak Topic Analysis</h3>
-            <p>Automatically identifies your weakest areas from quiz performance and suggests targeted improvement actions.</p>
-            <span className="feature-tag">Auto-detect</span>
+        {/* Mobile menu */}
+        <div className={`ex-mobile ${menuOpen ? "open" : ""}`}>
+          {NAV_LINKS.map((l) => (
+            <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>
+              {l.label}
+            </a>
+          ))}
+          <div className="ex-mobile-cta">
+            <Link
+              to="/login"
+              className="ex-m-login"
+              onClick={() => setMenuOpen(false)}
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="ex-m-started"
+              onClick={() => setMenuOpen(false)}
+            >
+              Get Started
+            </Link>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* PDF HIGHLIGHT SECTION */}
-      <section className="pdf-highlight">
-        <div className="pdf-highlight-inner">
-          <div className="pdf-highlight-text reveal-left">
-            <div className="section-tag">PDF Upload</div>
-            <h2>Turn Your Notes into Practice Questions</h2>
-            <p>
-              Simply upload any PDF — lecture slides, notes, or textbook chapters — and our AI will extract the key concepts and generate exam-ready MCQs instantly.
-            </p>
-            <div className="pdf-steps">
-              <div className="pdf-step">
-                <div className="pdf-step-num">1</div>
-                <div className="pdf-step-text">
-                  <h4>Upload Your PDF</h4>
-                  <p>Drag & drop or browse your lecture notes, textbooks, or study material.</p>
-                </div>
+      <main>
+        {/* ══ HERO ══ */}
+        <section className="ex-hero" aria-label="Introduction">
+          <div className="ex-hero-bg" aria-hidden="true">
+            <span className="orb orb-a" />
+            <span className="orb orb-b" />
+            <span className="grid-overlay" />
+            <span className="particle p1" />
+            <span className="particle p2" />
+            <span className="particle p3" />
+            <span className="particle p4" />
+            <span className="particle p5" />
+          </div>
+
+          <div className="ex-hero-inner">
+            <div className="ex-hero-copy">
+              <p className="ex-eyebrow">
+                <span className="ex-eyebrow-dot" />
+                Your personal AI exam coach
+              </p>
+              <h1>
+                Your Next Exam Deserves a{" "}
+                <span className="grad">Smarter Strategy.</span>
+              </h1>
+              <p className="ex-lead">
+                Turn your notes into practice, uncover your weak topics, and
+                build a personalized study plan with AI-powered exam
+                preparation.
+              </p>
+              <div className="ex-hero-btns">
+                <Link
+                  to="/register"
+                  className="ex-btn-primary btn-anim btn-shine"
+                >
+                  <span className="btn-label">Start Preparing Free</span>
+                  <span className="btn-arrow" aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+                <a href="#preview" className="ex-btn-ghost btn-anim">
+                  <span className="btn-label">Explore the Platform</span>
+                  <span className="btn-arrow" aria-hidden="true">
+                    ↓
+                  </span>
+                </a>
               </div>
-              <div className="pdf-step">
-                <div className="pdf-step-num">2</div>
-                <div className="pdf-step-text">
-                  <h4>AI Processes Your Content</h4>
-                  <p>Groq AI reads and understands the key topics from your uploaded document.</p>
-                </div>
-              </div>
-              <div className="pdf-step">
-                <div className="pdf-step-num">3</div>
-                <div className="pdf-step-text">
-                  <h4>Get Exam-Ready Questions</h4>
-                  <p>Receive a custom MCQ quiz based directly on your own study material.</p>
-                </div>
-              </div>
+              <p className="ex-trust">
+                <HiOutlineCheckCircle size={16} aria-hidden="true" />
+                Practice smarter. Track progress. Improve with every session.
+              </p>
             </div>
-            <Link to="/register" className="btn primary btn-anim btn-shine"><span className="btn-label">Try PDF Upload</span><span className="btn-arrow">→</span></Link>
-          </div>
 
-          <div className="pdf-visual reveal-right">
-            <div className="pdf-mockup">
-              <div className="pdf-mockup-header">
-                <div className="pdf-mockup-icon">📄</div>
-                <div>
-                  <div className="pdf-mockup-title">OS Notes.pdf</div>
-                  <div className="pdf-mockup-sub">3 questions generated</div>
+            {/* Hero visual */}
+            <div className="ex-hero-visual" aria-label="AI learning visualization preview">
+              <div className="neural-stage">
+                <div className="neural-core">
+                  <img
+                    src={circuitBrain}
+                    alt="ExamIQ neural study engine"
+                    loading="eager"
+                  />
+                  <span className="core-glow" aria-hidden="true" />
                 </div>
-              </div>
-              <div className="pdf-question-list">
-                <div className="pdf-question-item">
-                  <p>What is the purpose of process scheduling?</p>
-                  <div className="pdf-question-options">
-                    <span className="pdf-option">CPU Allocation</span>
-                    <span className="pdf-option correct">✓ Correct</span>
+                <span className="orbit orbit-1" aria-hidden="true">
+                  <i className="sat s1" />
+                </span>
+                <span className="orbit orbit-2" aria-hidden="true">
+                  <i className="sat s2" />
+                  <i className="sat s3" />
+                </span>
+                <span className="orbit orbit-3" aria-hidden="true" />
+
+                <div className="float-card fc-quiz">
+                  <div className="fc-head">
+                    <span className="fc-icon">
+                      <HiOutlineLightningBolt size={15} />
+                    </span>
+                    <div>
+                      <strong>OS Quiz · Q3/10</strong>
+                      <small>Process Scheduling</small>
+                    </div>
+                    <span className="fc-live">
+                      <i /> Live
+                    </span>
                   </div>
-                </div>
-                <div className="pdf-question-item">
                   <p>Which algorithm avoids deadlock?</p>
-                  <div className="pdf-question-options">
-                    <span className="pdf-option">Round Robin</span>
-                    <span className="pdf-option correct">✓ Banker's Algo</span>
+                  <div className="fc-opts">
+                    <span>Round Robin</span>
+                    <span className="ok">Banker&apos;s ✓</span>
+                  </div>
+                  <div className="fc-progress">
+                    <i style={{ width: "30%" }} />
                   </div>
                 </div>
-                <div className="pdf-question-item">
-                  <p>Define virtual memory.</p>
-                  <div className="pdf-question-options">
-                    <span className="pdf-option">RAM Extension</span>
-                    <span className="pdf-option correct">✓ Correct</span>
+
+                <div className="float-card fc-analytics">
+                  <div className="fc-head">
+                    <span className="fc-icon cyan">
+                      <HiOutlineTrendingUp size={15} />
+                    </span>
+                    <div>
+                      <strong>Accuracy 78%</strong>
+                      <small>Last 7 sessions</small>
+                    </div>
                   </div>
+                  <div className="fc-bars" aria-hidden="true">
+                    {[42, 58, 50, 66, 60, 74, 78].map((h, i) => (
+                      <i key={i} style={{ height: `${h}%` }} />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="float-card fc-plan">
+                  <div className="fc-head">
+                    <span className="fc-icon violet">
+                      <HiOutlineCalendar size={15} />
+                    </span>
+                    <div>
+                      <strong>Today&apos;s plan</strong>
+                      <small>3 tasks · 90 min</small>
+                    </div>
+                  </div>
+                  <ul>
+                    <li>
+                      <HiOutlineCheckCircle size={14} /> Revise B+ Trees
+                    </li>
+                    <li>
+                      <HiOutlineClock size={14} /> DBMS quiz · 25 min
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* HOW IT WORKS */}
-      <section className="how-section" id="how">
-        <div className="section-header reveal-up">
-          <div className="section-tag">Process</div>
-          <h2>How ExamIQ Works</h2>
-          <p>An intelligent, step-by-step AI-driven exam preparation pipeline built for CS students.</p>
-        </div>
-
-        <div className="flow-grid">
-          <div className="flow-item reveal-up" style={{ transitionDelay: "0ms" }}>
-            <div className="flow-circle">📊</div>
-            <h4>Data Analysis</h4>
-            <p>Your test history, accuracy and learning patterns analyzed</p>
-          </div>
-          <div className="flow-item reveal-up" style={{ transitionDelay: "80ms" }}>
-            <div className="flow-circle">🧠</div>
-            <h4>AI Prediction</h4>
-            <p>ML models predict risk and exam failure probability</p>
-          </div>
-          <div className="flow-item reveal-up" style={{ transitionDelay: "160ms" }}>
-            <div className="flow-circle">📅</div>
-            <h4>Study Planner</h4>
-            <p>Personalized daily plans based on weak topics</p>
-          </div>
-          <div className="flow-item reveal-up" style={{ transitionDelay: "240ms" }}>
-            <div className="flow-circle">📝</div>
-            <h4>AI Evaluation</h4>
-            <p>Automatic answer evaluation like a real examiner</p>
-          </div>
-          <div className="flow-item reveal-up" style={{ transitionDelay: "320ms" }}>
-            <div className="flow-circle">🚨</div>
-            <h4>Smart Alerts</h4>
-            <p>Real-time feedback and improvement suggestions</p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA BANNER */}
-      <section className="cta-banner reveal-scale">
-        <h2>Ready to Transform Your Exam Prep?</h2>
-        <p>Join students who are already using AI to study smarter, not harder.</p>
-        <div className="cta-banner-buttons">
-          <Link to="/register" className="btn-cta-white btn-anim btn-shine"><span className="btn-label">Get Started Free</span></Link>
-          <Link to="/login" className="btn-cta-outline btn-anim"><span className="btn-label">Login to Dashboard</span><span className="btn-arrow">→</span></Link>
-        </div>
-      </section>
-
-      {/* CONTACT SECTION */}
-      <section className="contact-section" id="contact">
-        <div className="contact-wrapper">
-          <div className="contact-left reveal-left">
-            <h2>Let's Connect</h2>
+        {/* ══ PLATFORM PREVIEW ══ */}
+        <section className="ex-preview" id="preview" aria-label="Platform preview">
+          <div className="ex-section-head rv-up">
+            <p className="ex-kicker">Platform preview</p>
+            <h2>One workspace for your entire preparation</h2>
             <p>
-              Have questions, feedback, or ideas about ExamIQ?<br />
-              This is a final year project — your feedback matters!
+              A preview of the ExamIQ dashboard — illustrative sample data, not
+              live user data.
             </p>
-            <div className="contact-actions">
-              <a href="mailto:pp50646464@gmail.com" className="contact-btn">
-                <HiOutlineMailOpen size={16} /> Email Us
-              </a>
-              <a href="tel:+919328761976" className="contact-btn secondary">
-                <HiOutlinePhone size={16} /> Call Us
-              </a>
+          </div>
+
+          <div className="ex-window rv-scale">
+            <div className="ex-window-bar" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <span>app.examiq.io/dashboard — preview</span>
+            </div>
+            <div className="ex-window-body">
+              <div className="ex-dash-main">
+                <div className="ex-dash-row">
+                  <div className="ex-metric">
+                    <small>Study progress</small>
+                    <strong>68%</strong>
+                    <div className="ex-meter">
+                      <i style={{ width: "68%" }} />
+                    </div>
+                  </div>
+                  <div className="ex-metric">
+                    <small>Quiz accuracy</small>
+                    <strong>78%</strong>
+                    <div className="ex-meter cyan">
+                      <i style={{ width: "78%" }} />
+                    </div>
+                  </div>
+                  <div className="ex-metric">
+                    <small>Day streak</small>
+                    <strong>12 days</strong>
+                    <div className="ex-meter violet">
+                      <i style={{ width: "55%" }} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="ex-dash-subject">
+                  <h3>Subject-wise performance</h3>
+                  {DASH_SUBJECTS.map((s) => (
+                    <div className="ex-sub-row" key={s.name}>
+                      <span>{s.name}</span>
+                      <div className="ex-meter sm">
+                        <i
+                          className={`tone-${s.tone}`}
+                          style={{ width: `${s.pct}%` }}
+                        />
+                      </div>
+                      <b>{s.pct}%</b>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <aside className="ex-dash-side">
+                <div className="ex-side-card">
+                  <h3>
+                    <HiOutlineClock size={15} /> Upcoming tasks
+                  </h3>
+                  <ul>
+                    <li>Revise Normalization — 30 min</li>
+                    <li>CN practice set — 20 questions</li>
+                    <li>OS mock quiz — tomorrow</li>
+                  </ul>
+                </div>
+                <div className="ex-side-card warn">
+                  <h3>
+                    <HiOutlineEye size={15} /> Weak-topic insights
+                  </h3>
+                  <ul>
+                    <li>Deadlock Prevention — revise</li>
+                    <li>SQL Joins — practice more</li>
+                  </ul>
+                  <small>Sample insights for illustration.</small>
+                </div>
+                <div className="ex-side-card">
+                  <h3>
+                    <HiOutlineBookOpen size={15} /> Recent activity
+                  </h3>
+                  <ul>
+                    <li>DBMS Quiz · 8/10</li>
+                    <li>OS Notes → 5 questions</li>
+                  </ul>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ FEATURES ══ */}
+        <section className="ex-features" id="features" aria-label="Features">
+          <div className="ex-section-head rv-up">
+            <p className="ex-kicker">Features</p>
+            <h2>Everything You Need to Prepare with Confidence</h2>
+            <p>
+              One intelligent workspace for more focused, personalized exam
+              preparation.
+            </p>
+          </div>
+          <div className="ex-feature-grid">
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <article
+                  className="ex-feature rv-up"
+                  key={f.title}
+                  style={{ transitionDelay: `${(i % 3) * 90}ms` }}
+                >
+                  <span className="ex-feature-glow" aria-hidden="true" />
+                  <span className="ex-feature-icon">
+                    <Icon size={22} aria-hidden="true" />
+                  </span>
+                  <h3>{f.title}</h3>
+                  <p>{f.desc}</p>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ══ HOW IT WORKS ══ */}
+        <section className="ex-how" id="how" aria-label="How it works">
+          <div className="ex-section-head rv-up">
+            <p className="ex-kicker">How it works</p>
+            <h2>From goal to exam-ready in three steps</h2>
+          </div>
+          <div className="ex-steps">
+            <span className="ex-steps-line" aria-hidden="true">
+              <i />
+            </span>
+            {[
+              {
+                n: "01",
+                icon: HiOutlineFlag,
+                t: "Set Your Goal",
+                d: "Choose subjects, topics, and your preparation priorities.",
+              },
+              {
+                n: "02",
+                icon: HiOutlineLightningBolt,
+                t: "Practice with AI",
+                d: "Generate questions, work through quizzes, and learn from your study material.",
+              },
+              {
+                n: "03",
+                icon: HiOutlineTrendingUp,
+                t: "Analyze and Improve",
+                d: "Review your performance, identify weak areas, and refine your study plan.",
+              },
+            ].map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <article
+                  className="ex-step rv-up"
+                  key={s.n}
+                  style={{ transitionDelay: `${i * 110}ms` }}
+                >
+                  <span className="ex-step-num">{s.n}</span>
+                  <span className="ex-step-icon">
+                    <Icon size={24} aria-hidden="true" />
+                  </span>
+                  <h3>{s.t}</h3>
+                  <p>{s.d}</p>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ══ PDF SHOWCASE ══ */}
+        <section className="ex-split" id="pdf" aria-label="Smart PDF learning">
+          <div className="ex-split-inner">
+            <div className="ex-split-copy rv-left">
+              <p className="ex-kicker">Smart PDF learning</p>
+              <h2>Your Study Material. Your Personal Practice Set.</h2>
+              <p>
+                Upload lecture slides or notes and get exam-style questions
+                generated from your own content. Illustrative demo below — the
+                full flow lives inside the app after login.
+              </p>
+              <ul className="ex-checks">
+                <li>
+                  <HiOutlineCheckCircle size={17} /> Works with notes, slides,
+                  and textbook chapters
+                </li>
+                <li>
+                  <HiOutlineCheckCircle size={17} /> Questions matched to your
+                  syllabus topics
+                </li>
+                <li>
+                  <HiOutlineCheckCircle size={17} /> Explanations that show why
+                  answers are correct
+                </li>
+              </ul>
+              <Link
+                to="/register"
+                className="ex-btn-primary btn-anim btn-shine"
+              >
+                <span className="btn-label">Try PDF Learning</span>
+                <span className="btn-arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            </div>
+            <div className="ex-split-visual rv-right" aria-label="Document to questions demo">
+              <div className="ex-doc-flow">
+                <div className="ex-doc">
+                  <span className="ex-doc-icon">
+                    <HiOutlineUpload size={18} />
+                  </span>
+                  <strong>OS-Notes.pdf</strong>
+                  <small>2.4 MB · uploaded</small>
+                  <div className="ex-doc-scan" aria-hidden="true" />
+                </div>
+                <span className="ex-doc-arrow" aria-hidden="true">
+                  →
+                </span>
+                <div className="ex-gen">
+                  <div className="ex-gen-head">
+                    <strong>Generated practice set</strong>
+                    <small>3 questions · sample</small>
+                  </div>
+                  <div className="ex-gen-q">
+                    <p>What is the purpose of process scheduling?</p>
+                    <div>
+                      <span>CPU allocation</span>
+                      <span className="ok">Correct ✓</span>
+                    </div>
+                  </div>
+                  <div className="ex-gen-q">
+                    <p>Which algorithm avoids deadlock?</p>
+                    <div>
+                      <span>Round Robin</span>
+                      <span className="ok">Banker&apos;s ✓</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ INSIGHTS SHOWCASE ══ */}
+        <section className="ex-insights" id="insights" aria-label="Personalized insights">
+          <div className="ex-section-head rv-up">
+            <p className="ex-kicker">Personalized insights</p>
+            <h2>Know What to Study Next.</h2>
+            <p>
+              Performance data helps you focus preparation where it counts.
+              Cards below show illustrative sample data.
+            </p>
+          </div>
+          <div className="ex-insight-grid">
+            <article className="ex-insight rv-up">
+              <h3>
+                <HiOutlineBookOpen size={16} /> Subject performance
+              </h3>
+              <div className="ex-ring-row">
+                <span className="ex-ring" style={{ "--p": "82%" }}>
+                  <b>82%</b>
+                </span>
+                <div>
+                  <strong>Operating Systems</strong>
+                  <small>Strong · keep momentum</small>
+                </div>
+              </div>
+              <div className="ex-ring-row">
+                <span className="ex-ring amber" style={{ "--p": "57%" }}>
+                  <b>57%</b>
+                </span>
+                <div>
+                  <strong>Networks</strong>
+                  <small>Needs attention</small>
+                </div>
+              </div>
+            </article>
+            <article
+              className="ex-insight rv-up"
+              style={{ transitionDelay: "90ms" }}
+            >
+              <h3>
+                <HiOutlineTrendingUp size={16} /> Accuracy trend
+              </h3>
+              <div className="ex-trend" aria-hidden="true">
+                {[38, 46, 44, 56, 60, 66, 74].map((h, i) => (
+                  <i key={i} style={{ height: `${h}%` }} />
+                ))}
+              </div>
+              <p className="ex-insight-note">+16 pts over 3 weeks · sample</p>
+            </article>
+            <article
+              className="ex-insight rv-up"
+              style={{ transitionDelay: "180ms" }}
+            >
+              <h3>
+                <HiOutlineEye size={16} /> Topics to revise
+              </h3>
+              <ul className="ex-revise">
+                <li>
+                  <span>Deadlock Prevention</span>
+                  <em className="low">High priority</em>
+                </li>
+                <li>
+                  <span>SQL Normalization</span>
+                  <em className="mid">Medium</em>
+                </li>
+                <li>
+                  <span>IP Subnetting</span>
+                  <em className="mid">Medium</em>
+                </li>
+              </ul>
+            </article>
+            <article
+              className="ex-insight rv-up"
+              style={{ transitionDelay: "270ms" }}
+            >
+              <h3>
+                <HiOutlineCalendar size={16} /> Next session
+              </h3>
+              <div className="ex-next">
+                <strong>DBMS · Normalization drill</strong>
+                <small>20 questions · ~25 min · recommended sample</small>
+                <Link to="/register" className="ex-mini-btn btn-anim">
+                  Start session →
+                </Link>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        {/* ══ BENEFITS ══ */}
+        <section className="ex-benefits" id="benefits" aria-label="Benefits">
+          <div className="ex-section-head rv-up">
+            <p className="ex-kicker">Why ExamIQ</p>
+            <h2>Study less, learn more</h2>
+          </div>
+
+          <div className="ex-benefit rv-left">
+            <div className="ex-benefit-copy">
+              <p className="ex-kicker">01 · Focus</p>
+              <h3>Focus on What Matters</h3>
+              <p>
+                Spend more time improving weak topics instead of re-reading
+                what you already know. Every session points to the next
+                highest-value material.
+              </p>
+            </div>
+            <div className="ex-benefit-visual" aria-hidden="true">
+              <div className="ex-bv-card">
+                <HiOutlineSearch size={20} />
+                <strong>Weak topics found: 3</strong>
+                <span>Deadlock · Joins · Subnetting</span>
+              </div>
             </div>
           </div>
 
-          <div className="contact-right reveal-right">
-            <div className="contact-cards">
-              <div className="contact-card">
-                <div className="contact-card-icon"><HiOutlineMail size={18} /></div>
-                <div className="contact-card-text">
-                  <strong>Email</strong>
-                  <span>pp50646464@gmail.com</span>
-                </div>
-              </div>
-              <div className="contact-card">
-                <div className="contact-card-icon"><HiOutlinePhone size={18} /></div>
-                <div className="contact-card-text">
-                  <strong>Phone</strong>
-                  <span>+91 9328761976</span>
-                </div>
-              </div>
-              <div className="contact-card">
-                <div className="contact-card-icon"><HiOutlineAcademicCap size={18} /></div>
-                <div className="contact-card-text">
-                  <strong>Project Type</strong>
-                  <span>Final Year AI Project</span>
-                </div>
+          <div className="ex-benefit flip rv-right">
+            <div className="ex-benefit-copy">
+              <p className="ex-kicker">02 · Clarity</p>
+              <h3>Make Progress Visible</h3>
+              <p>
+                Understand performance through meaningful analytics — accuracy
+                trends, subject mastery, and streaks that show real momentum.
+              </p>
+            </div>
+            <div className="ex-benefit-visual" aria-hidden="true">
+              <div className="ex-bv-card">
+                <HiOutlineChartBar size={20} />
+                <strong>Accuracy 62% → 78%</strong>
+                <span>Last 14 sessions</span>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="contact-footer">
-          © 2026 AI Exam Preparation System · ExamIQ · Built with ❤️ by Prince Patel
-        </div>
-      </section>
+          <div className="ex-benefit rv-left">
+            <div className="ex-benefit-copy">
+              <p className="ex-kicker">03 · Consistency</p>
+              <h3>Build Consistent Habits</h3>
+              <p>
+                Use structured study plans to stay organized — short daily
+                sessions that compound into exam confidence.
+              </p>
+            </div>
+            <div className="ex-benefit-visual" aria-hidden="true">
+              <div className="ex-bv-card">
+                <HiOutlineCalendar size={20} />
+                <strong>12-day streak</strong>
+                <span>Today: 2 tasks · 45 min</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
+        {/* ══ FINAL CTA ══ */}
+        <section className="ex-final rv-scale" aria-label="Get started">
+          <div className="ex-final-bg" aria-hidden="true">
+            <span className="orb orb-c" />
+            <span className="particle p2" />
+            <span className="particle p4" />
+          </div>
+          <h2>Make Your Next Study Session Count.</h2>
+          <p>
+            Start building a more focused exam-preparation routine with ExamIQ.
+          </p>
+          <div className="ex-final-btns">
+            <Link to="/register" className="ex-btn-primary big btn-anim btn-shine">
+              <span className="btn-label">Get Started Free</span>
+              <span className="btn-arrow" aria-hidden="true">
+                →
+              </span>
+            </Link>
+            <Link to="/login" className="ex-login-link">
+              Already have an account? <u>Log in</u>
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      {/* ══ FOOTER ══ */}
+      <footer className="ex-footer" id="contact">
+        <div className="ex-footer-inner">
+          <div className="ex-footer-brand">
+            <Link to="/" className="ex-brand" aria-label="ExamIQ home">
+              <img src={logo} alt="ExamIQ logo" width="30" height="30" />
+              <span>
+                Exam<em>IQ</em>
+              </span>
+            </Link>
+            <p>
+              AI-powered exam preparation and personalized learning for
+              focused, confident students.
+            </p>
+            <p className="ex-tagline">Prepare Smarter. Perform Better.</p>
+          </div>
+          <nav className="ex-footer-nav" aria-label="Footer">
+            <div>
+              <h4>Product</h4>
+              <a href="#features">Features</a>
+              <a href="#how">How It Works</a>
+              <a href="#benefits">Benefits</a>
+              <a href="#preview">Platform preview</a>
+            </div>
+            <div>
+              <h4>Account</h4>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Get Started</Link>
+            </div>
+            <div>
+              <h4>Contact</h4>
+              <a href="mailto:pp50646464@gmail.com">
+                <HiOutlineMail size={14} /> pp50646464@gmail.com
+              </a>
+              <a href="tel:+919328761976">
+                <HiOutlinePhone size={14} /> +91 9328761976
+              </a>
+              <span className="ex-contact-note">
+                <HiOutlineAcademicCap size={14} /> Final-year AI project
+              </span>
+            </div>
+          </nav>
+        </div>
+        <div className="ex-footer-base">
+          <span>© {year} ExamIQ · AI Exam Preparation System</span>
+          <span>Built by Prince Patel</span>
+        </div>
+      </footer>
     </div>
   );
 };
