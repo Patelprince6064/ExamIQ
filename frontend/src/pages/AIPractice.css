@@ -5,10 +5,6 @@
 
 .ai-page { background: #f8fafc; }
 
-/* Tutor page owns the full width: hide the global floating timer pill
-   here only (other pages keep it) and let the workspace breathe. */
-.ai-page .timer-fab { display: none; }
-
 .ai-tutor-main {
   flex: 1 1 0;
   min-width: 0;

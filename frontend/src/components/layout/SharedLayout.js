@@ -15,7 +15,6 @@ import {
 } from "react-icons/hi";
 import { clearAuth, getUser } from "../../services/api";
 import logo from "../../assets/logo.png";
-import TimerWidget from "../timer/TimerWidget";
 import "./SharedLayout.css";
 
 const NAV_GROUPS = [
@@ -106,7 +105,6 @@ export function SharedSidebar() {
             )}
           </button>
         </div>
-        <TimerWidget />
         {NAV_GROUPS.map((group) => (
           <div className="nav-section" key={group.label}>
             <p className="nav-label">{group.label}</p>

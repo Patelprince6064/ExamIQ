@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { TimerProvider } from "./context/TimerContext";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -17,8 +16,7 @@ import Roadmap from "./pages/Roadmap";
 
 function App() {
   return (
-    <TimerProvider>
-      <Routes>
+    <Routes>
         <Route path="/login"    element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -32,8 +30,7 @@ function App() {
         <Route path="/roadmap" element={<Roadmap />} />
 
         <Route path="/" element={<Home />} />
-      </Routes>
-    </TimerProvider>
+    </Routes>
   );
 }
 
