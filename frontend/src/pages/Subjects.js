@@ -839,93 +839,89 @@ function Subjects() {
                 )}
               </div>
             ) : section === "video" ? (
-              <div className="xp-video" key={`video-${activeTopic?.name}`}>
-                <div className="xp-video-bg" aria-hidden="true">
-                  <span className="xp-orb xp-orb-1" />
-                  <span className="xp-orb xp-orb-2" />
-                  <span className="xp-orb xp-orb-3" />
-                  <span className="xp-float xp-f1" /> <span className="xp-float xp-f2" />
-                  <span className="xp-float xp-f3" /> <span className="xp-float xp-f4" />
-                  <span className="xp-float xp-f5" /> <span className="xp-float xp-f6" />
-                </div>
-                <div className="xp-video-hero xp-rise" style={{ animationDelay: "0ms" }}>
-                  <a className="xp-player" href={activeTopic.videoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${activeTopic.name} on YouTube`}>
-                    <div className="xp-player-screen">
-                      <div className="xp-player-grid" aria-hidden="true" />
-                      <div className="xp-player-badge">▶ &nbsp;NOW PLAYING · YOUTUBE CURATED</div>
-                      <div className="xp-eq" aria-hidden="true">
-                        {Array.from({ length: 28 }).map((_, i) => (
-                          <span key={i} style={{ animationDelay: `${(i % 14) * 0.12}s`, animationDuration: `${0.9 + ((i * 37) % 10) / 10}s` }} />
-                        ))}
-                      </div>
-                      <div className="xp-play-wrap">
-                        <span className="xp-pulse" />
-                        <span className="xp-pulse xp-pulse-2" />
-                        <span className="xp-play-btn"><HiOutlinePlay size={34} /></span>
-                      </div>
-                      <div className="xp-player-meta">
-                        <div className="xp-live-dot" />
-                        <div>
-                          <div className="xp-player-topic">{activeTopic.name}</div>
-                          <div className="xp-player-sub">{selected.name} · {selected.code} · HD Lecture</div>
-                        </div>
-                        <span className="xp-hd">4K</span>
+              <div className="yt-wrap" key={`video-${activeTopic?.name}`}>
+                <div className="yt-hero">
+                  <div className="yt-hero-left">
+                    <div className="yt-id-row">
+                      <span className="yt-logo" aria-hidden="true">
+                        <HiOutlinePlay size={20} />
+                      </span>
+                      <div>
+                        <p className="yt-eyebrow">Video resources · {selected.code}</p>
+                        <h2 className="yt-title">{activeTopic.name}</h2>
+                        <p className="yt-subtitle">{selected.name} · Curated YouTube searches for this exact topic</p>
                       </div>
                     </div>
-                  </a>
-                  <div className="xp-video-copy">
-                    <p className="xp-eyebrow"><span className="xp-eyebrow-dot" /> VIDEO LAB · {selected.code}</p>
-                    <h2>Watch <span className="xp-grad-text">{activeTopic.name}</span> come alive</h2>
-                    <p className="xp-video-desc">Hand-tuned YouTube searches for this exact topic — pick your learning vibe. Each card opens the freshest, most-viewed lectures in a new tab.</p>
-                    <div className="xp-chip-row">
-                      <span className="xp-chip">⚡ Crash Course</span>
-                      <span className="xp-chip">🎓 Deep Dive</span>
-                      <span className="xp-chip">📝 PYQ + Tricks</span>
+                    <p className="yt-desc">
+                      Start with the best match, then choose a format that fits your time —
+                      quick revision, full concept lecture, or exam-focused practice. Every
+                      card opens a filtered YouTube search in a new tab.
+                    </p>
+                    <div className="yt-actions">
+                      <a className="yt-btn-primary" href={activeTopic.videoUrl} target="_blank" rel="noopener noreferrer">
+                        <HiOutlinePlay size={16} /> Watch best match
+                        <HiOutlineArrowRight size={15} />
+                      </a>
+                      <a
+                        className="yt-btn-secondary"
+                        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`${activeTopic.name} ${selected.name} crash course one shot`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Quick revision
+                      </a>
                     </div>
-                    <a className="xp-cta-red" href={activeTopic.videoUrl} target="_blank" rel="noopener noreferrer">
-                      <span className="xp-cta-play"><HiOutlinePlay size={16} /></span> Watch Best Match on YouTube
-                      <HiOutlineArrowRight size={16} />
-                    </a>
-                    <p className="xp-video-hint">Tip: filter by most-viewed · Neso Academy · Gate Smashers · Abdul Bari · Jenny's Lectures</p>
+                    <div className="yt-meta">
+                      <span><HiOutlineCheckCircle size={14} /> Most-viewed first</span>
+                      <span><HiOutlineBookOpen size={14} /> Trusted educators</span>
+                      <span><HiOutlineNewspaper size={14} /> Opens in new tab</span>
+                    </div>
+                  </div>
+                  <div className="yt-hero-side">
+                    <div className="yt-side-card">
+                      <p className="yt-side-label">Suggested channels</p>
+                      <div className="yt-channels">
+                        <span>Neso Academy</span>
+                        <span>Gate Smashers</span>
+                        <span>Abdul Bari</span>
+                        <span>Jenny&apos;s Lectures</span>
+                      </div>
+                      <p className="yt-side-hint">On YouTube, sort by view count and check upload date for the latest syllabus.</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="xp-playlist">
+                <div className="yt-grid">
                   {[
-                    { tag: "⚡ Fastest", title: "Crash Course", desc: "Full topic in 15–20 min, rapid revision", grad: "linear-gradient(135deg,#f43f5e,#f97316)", query: `${activeTopic.name} ${selected.name} crash course one shot`, dur: "18:42" },
-                    { tag: "🎓 In Depth", title: "Deep Lecture", desc: "Concept-first long lecture, zero gaps", grad: "linear-gradient(135deg,#2563eb,#06b6d4)", query: `${activeTopic.name} ${selected.name} full lecture in depth`, dur: "52:10" },
-                    { tag: "📝 Exam Mode", title: "PYQ + Tricks", desc: "Previous-year questions & shortcuts", grad: "linear-gradient(135deg,#10b981,#059669)", query: `${activeTopic.name} ${selected.name} previous year questions tricks`, dur: "27:35" },
-                    { tag: "🎧 Shorts", title: "Visual Bites", desc: "Shorts & animations for memory hooks", grad: "linear-gradient(135deg,#8b5cf6,#ec4899)", query: `${activeTopic.name} ${selected.name} explained visually shorts`, dur: "08:19" },
-                  ].map((v, i) => (
+                    { icon: <HiOutlinePlay size={19} />, cls: "red", kicker: "Quick revision", title: "Crash course", desc: "Full topic overview in 15–20 minutes. Best for last-mile revision.", query: `${activeTopic.name} ${selected.name} crash course one shot` },
+                    { icon: <HiOutlineBookOpen size={19} />, cls: "blue", kicker: "Concept clarity", title: "In-depth lecture", desc: "Slow, concept-first lecture that builds from foundations to depth.", query: `${activeTopic.name} ${selected.name} full lecture in depth` },
+                    { icon: <HiOutlineClipboardCheck size={19} />, cls: "green", kicker: "Exam practice", title: "PYQs & shortcuts", desc: "Previous-year questions, tricks and exam-oriented problem solving.", query: `${activeTopic.name} ${selected.name} previous year questions tricks` },
+                    { icon: <HiOutlineSparkles size={19} />, cls: "purple", kicker: "Memory hooks", title: "Visual explainer", desc: "Animations and short visual explainers to lock in intuition.", query: `${activeTopic.name} ${selected.name} explained visually` },
+                  ].map((v) => (
                     <a
                       key={v.title}
-                      className="xp-vcard xp-rise"
-                      style={{ animationDelay: `${120 + i * 90}ms` }}
+                      className="yt-card"
                       href={`https://www.youtube.com/results?search_query=${encodeURIComponent(v.query)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <div className="xp-vthumb" style={{ background: v.grad }}>
-                        <span className="xp-vtag">{v.tag}</span>
-                        <span className="xp-vplay"><HiOutlinePlay size={18} /></span>
-                        <span className="xp-vdur">{v.dur}</span>
-                        <span className="xp-vshine" />
+                      <div className={`yt-thumb yt-${v.cls}`}>
+                        <span className="yt-thumb-icon">{v.icon}</span>
+                        <span className="yt-thumb-play" aria-hidden="true"><HiOutlinePlay size={14} /></span>
                       </div>
-                      <div className="xp-vbody">
-                        <div className="xp-vtitle">{v.title}</div>
-                        <div className="xp-vdesc">{v.desc}</div>
-                        <div className="xp-vgo">Open on YouTube <HiOutlineArrowRight size={13} /></div>
+                      <div className="yt-card-body">
+                        <p className="yt-kicker">{v.kicker}</p>
+                        <p className="yt-card-title">{v.title}</p>
+                        <p className="yt-card-desc">{v.desc}</p>
+                        <span className="yt-card-link">Open on YouTube <HiOutlineArrowRight size={13} /></span>
                       </div>
                     </a>
                   ))}
                 </div>
 
-                <div className="xp-marquee xp-rise" style={{ animationDelay: "420ms" }} aria-hidden="true">
-                  <div className="xp-marquee-track">
-                    {[0, 1].map((k) => (
-                      <span key={k}>▶ WATCH AT 1.5x SPEED &nbsp;·&nbsp; ✍ TAKE NOTES WHILE WATCHING &nbsp;·&nbsp; ⏸ PAUSE & RECALL &nbsp;·&nbsp; 🧠 TEACH IT BACK &nbsp;·&nbsp; 🔁 REVISE IN 24 HRS &nbsp;·&nbsp;</span>
-                    ))}
-                  </div>
+                <div className="yt-tip">
+                  <HiOutlineCheckCircle size={16} />
+                  <p><strong>Study tip:</strong> watch at 1.25–1.5x, pause and recall each idea, then attempt a short quiz on this topic.</p>
                 </div>
               </div>
             ) : section === "test" ? (

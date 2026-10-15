@@ -1573,3 +1573,160 @@
 .xp-res-actions { position: relative; z-index: 1; display: flex; gap: 12px; flex-wrap: wrap; }
 @media (max-width: 900px) { .xp-res-hero { grid-template-columns: 1fr; text-align: center; justify-items: center; } .xp-stat-row { grid-template-columns: 1fr; } .xp-opts { padding-left: 0; } .xp-quiz-top { flex-wrap: wrap; } }
 
+/* ═══════════════════════════════════════════
+   YOUTUBE — Professional redesign (yt-*)
+   Clean, calm, consistent with Subjects system
+   ═══════════════════════════════════════════ */
+.yt-wrap { display: flex; flex-direction: column; gap: 16px; }
+.yt-hero {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 26px 28px;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 26px;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.yt-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #dc2626, #f87171, #2563eb);
+  opacity: 0.85;
+}
+.yt-id-row { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px; }
+.yt-logo {
+  width: 46px; height: 46px; border-radius: 14px; flex-shrink: 0;
+  background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
+  display: flex; align-items: center; justify-content: center;
+}
+.yt-eyebrow {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.9px;
+  text-transform: uppercase; color: #dc2626; margin-bottom: 4px;
+}
+.yt-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 24px; font-weight: 800; letter-spacing: -0.4px;
+  color: #0f172a; line-height: 1.2;
+}
+.yt-subtitle { font-size: 13px; color: #64748b; margin-top: 3px; }
+.yt-desc { font-size: 14px; color: #475569; line-height: 1.7; max-width: 620px; margin: 4px 0 18px; }
+.yt-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.yt-btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #dc2626; color: #fff; text-decoration: none;
+  font-size: 14px; font-weight: 700;
+  padding: 12px 20px; border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(220,38,38,0.28);
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+}
+.yt-btn-primary:hover { background: #b91c1c; transform: translateY(-1px); box-shadow: 0 8px 22px rgba(220,38,38,0.32); }
+.yt-btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; color: #334155; text-decoration: none;
+  font-size: 14px; font-weight: 700;
+  padding: 12px 20px; border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  transition: border-color 0.18s, background 0.18s, color 0.18s;
+}
+.yt-btn-secondary:hover { border-color: #93c5fd; background: #eff6ff; color: #1d4ed8; }
+.yt-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+.yt-meta span {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12.5px; font-weight: 600; color: #64748b;
+}
+.yt-meta svg { color: #22c55e; }
+.yt-hero-side { display: flex; }
+.yt-side-card {
+  flex: 1;
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 16px; padding: 18px;
+  display: flex; flex-direction: column; gap: 12px;
+  align-self: start;
+}
+.yt-side-label {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
+  text-transform: uppercase; color: #475569;
+}
+.yt-channels { display: flex; flex-wrap: wrap; gap: 7px; }
+.yt-channels span {
+  font-size: 12px; font-weight: 700; color: #334155;
+  background: #fff; border: 1px solid #e2e8f0;
+  padding: 6px 11px; border-radius: 99px;
+}
+.yt-side-hint { font-size: 12.5px; color: #64748b; line-height: 1.6; }
+
+.yt-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.yt-card {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 18px;
+  overflow: hidden; text-decoration: none;
+  display: flex; flex-direction: column;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.yt-card:hover { transform: translateY(-4px); border-color: #93c5fd; box-shadow: 0 14px 32px rgba(15,23,42,0.1); }
+.yt-thumb {
+  height: 112px; display: flex; align-items: center; justify-content: center;
+  gap: 10px; position: relative;
+  border-bottom: 1px solid #f1f5f9;
+}
+.yt-red { background: #fef2f2; }
+.yt-blue { background: #eff6ff; }
+.yt-green { background: #f0fdf4; }
+.yt-purple { background: #faf5ff; }
+.yt-thumb-icon {
+  width: 46px; height: 46px; border-radius: 14px;
+  background: #fff; border: 1px solid #e2e8f0;
+  display: flex; align-items: center; justify-content: center;
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+}
+.yt-red .yt-thumb-icon { color: #dc2626; border-color: #fecaca; }
+.yt-blue .yt-thumb-icon { color: #2563eb; border-color: #bfdbfe; }
+.yt-green .yt-thumb-icon { color: #15803d; border-color: #bbf7d0; }
+.yt-purple .yt-thumb-icon { color: #7c3aed; border-color: #ddd6fe; }
+.yt-thumb-play {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #0f172a; color: #fff;
+  display: flex; align-items: center; justify-content: center; padding-left: 1px;
+}
+.yt-card-body { padding: 16px 16px 15px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.yt-kicker { font-size: 11px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: #94a3b8; }
+.yt-card-title { font-size: 15px; font-weight: 800; color: #0f172a; letter-spacing: -0.2px; }
+.yt-card-desc { font-size: 12.5px; color: #64748b; line-height: 1.6; min-height: 40px; }
+.yt-card-link {
+  margin-top: 8px; padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 13px; font-weight: 800; color: #dc2626;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.yt-card:hover .yt-card-link svg { transform: translateX(3px); }
+.yt-card-link svg { transition: transform 0.18s; }
+
+.yt-tip {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 14px; padding: 14px 16px;
+  font-size: 13px; color: #475569; line-height: 1.6;
+}
+.yt-tip svg { color: #2563eb; flex-shrink: 0; margin-top: 2px; }
+.yt-tip strong { color: #0f172a; }
+
+@media (max-width: 1000px) {
+  .yt-hero { grid-template-columns: 1fr; }
+  .yt-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .yt-hero { padding: 20px; }
+  .yt-title { font-size: 20px; }
+  .yt-grid { grid-template-columns: 1fr; }
+  .yt-card-desc { min-height: 0; }
+  .yt-actions .yt-btn-primary, .yt-actions .yt-btn-secondary { width: 100%; justify-content: center; }
+}
+
