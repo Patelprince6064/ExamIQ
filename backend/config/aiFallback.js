@@ -671,24 +671,67 @@ Timeline: ${startDate || "Today"} to ${examDate || "Exam Date"}
 }
 
 function generateFallbackRoadmap(skill) {
+  const s = skill || "General CS";
   return [
     {
       step: 1,
-      title: `${skill} Fundamentals & Core Theory`,
-      description: "Build strong foundational understanding of basic concepts, standard algorithms, and architecture.",
-      topics: ["Core Theoretical Principles", "Syntax & Structures", "Environment Setup", "Foundational Problem Solving"],
+      title: `Orientation & ${s} Environment Setup`,
+      description: `Understand what ${s} is used for, where it fits in real projects and exams, and set up a clean practice environment with essential tools and resources.`,
+      topics: [`Why learn ${s}: use-cases & career scope`, "Install tools, editors & extensions", "Hello-world first program / setup check", "How to use docs & community help"],
     },
     {
       step: 2,
-      title: `Intermediate ${skill} Implementation`,
-      description: "Master intermediate abstractions, system design patterns, and standard libraries.",
-      topics: ["Data Abstractions", "Standard Utilities", "Error Handling & Edge Cases", "Architecture & Optimization"],
+      title: `${s} Core Syntax & Fundamentals`,
+      description: `Master the absolute basics — syntax, core vocabulary and mental models of ${s} — so every later stage feels intuitive instead of memorized.`,
+      topics: [`${s} syntax & code structure`, "Variables, data types & operators", "Conditionals & loops in practice", "10 tiny drills to build fluency"],
     },
     {
       step: 3,
-      title: `Advanced ${skill} Mastery & Exam Polish`,
-      description: "Optimize performance, security, and practice high-yield exam questions.",
-      topics: ["Performance Profiling", "Scalability & Concurrency", "Previous Year Exam Papers", "Full-Length Mock Quizzes"],
+      title: `Essential ${s} Building Blocks`,
+      description: `Learn the everyday building blocks of ${s}: functions/modules, collections and file or component handling through guided mini-exercises.`,
+      topics: ["Functions, scope & modular code", "Arrays / lists / objects & iteration", "Error handling & edge cases", "Build 5 micro-exercises"],
+    },
+    {
+      step: 4,
+      title: `Intermediate ${s} Concepts & Patterns`,
+      description: `Move beyond basics into the patterns professionals use daily in ${s} — structuring logic cleanly and reusing proven approaches.`,
+      topics: ["Common design patterns in " + s, "Async / event-driven thinking", "Working with APIs / libraries", "Refactor a messy script cleanly"],
+    },
+    {
+      step: 5,
+      title: `${s} Data Handling & State Management`,
+      description: `Learn how ${s} manages data at scale — storage, state, and flow — plus how to avoid the most common data bugs in exams and projects.`,
+      topics: ["State / data flow fundamentals", "CRUD operations & persistence", "Validation & sanitization", "Debug a data-flow bug end-to-end"],
+    },
+    {
+      step: 6,
+      title: `${s} Tooling, Libraries & Ecosystem`,
+      description: `Get productive with the real ecosystem around ${s}: package managers, frameworks, testing helpers and productivity shortcuts.`,
+      topics: ["Package managers & project scaffolding", "Must-know libraries for " + s, "Version control (Git) workflow", "Linting, formatting & docs habits"],
+    },
+    {
+      step: 7,
+      title: `Mini Projects in ${s}`,
+      description: `Consolidate stages 1–6 by building two small but complete ${s} projects — the fastest way to convert theory into durable skill.`,
+      topics: [`Guided project 1: ${s} starter app`, "Guided project 2 with a twist", "Read & review someone else's code", "Write a project README & demo"],
+    },
+    {
+      step: 8,
+      title: `${s} Testing, Debugging & Optimization`,
+      description: `Learn to prove your ${s} code works and runs fast: systematic debugging, writing tests, and profiling performance bottlenecks.`,
+      topics: ["Debugging strategy: reproduce → isolate → fix", "Unit tests for core logic", "Performance profiling basics", "Fix 3 buggy programs on purpose"],
+    },
+    {
+      step: 9,
+      title: `Advanced ${s} & Best Practices`,
+      description: `Study the advanced 20% of ${s} that separates beginners from professionals — security, scalability, and clean architecture habits.`,
+      topics: ["Security & common pitfalls", "Scalability & clean architecture", "Code reviews & style guides", "Solve 5 advanced scenario questions"],
+    },
+    {
+      step: 10,
+      title: `${s} Portfolio, Interview & Mastery Plan`,
+      description: `Turn your skill into outcomes: a portfolio piece, interview-ready explanations, and a 30-day retention plan to keep ${s} sharp.`,
+      topics: ["Polish 1 flagship portfolio project", "Mock interview Q&A on " + s, "Previous-year / PYQ practice set", "30-day revision & streak plan"],
     },
   ];
 }

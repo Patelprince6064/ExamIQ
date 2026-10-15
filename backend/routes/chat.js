@@ -247,11 +247,11 @@ router.post("/roadmap", protect, async (req, res) => {
         messages: [
           {
             role: "system",
-            content: "You are an expert learning path advisor. You create highly structured, end-to-end roadmaps for learning new skills. You MUST respond ONLY with valid JSON. Do not include markdown tags like ```json or any other explanatory text.",
+            content: "You are an expert learning path advisor. You create highly structured, end-to-end roadmaps for learning new skills. You MUST respond ONLY with valid JSON — a bare array, no markdown, no code fences, no commentary. Exactly 10 stages, ordered beginner → mastery. Each stage object MUST have: step (1-10), title (string), description (1-2 sentences, skill-specific), topics (array of exactly 4 concrete sub-topics).",
           },
           {
             role: "user",
-            content: `Generate a comprehensive, end-to-end learning roadmap for the skill: "${skill}".`,
+            content: `Generate a comprehensive 10-stage learning roadmap for the skill: "${skill}". Cover: 1 orientation & setup, 2 core syntax, 3 building blocks, 4 intermediate patterns, 5 data handling, 6 tooling/ecosystem, 7 mini projects, 8 testing & optimization, 9 advanced & best practices, 10 portfolio/interview plan. Return ONLY the JSON array of 10 objects.`,
           },
         ],
       }),
@@ -271,7 +271,21 @@ router.post("/roadmap", protect, async (req, res) => {
        content = content.replace(/^```/, "").replace(/```$/, "").trim();
     }
 
-    const roadmapData = JSON.parse(content);
+     let roadmapData = JSON.parse(content);
+    // Normalize: accept bare array or { roadmap | steps | stages } wrapper
+    if (!Array.isArray(roadmapData)) {
+      roadmapData = roadmapData.roadmap || roadmapData.steps || roadmapData.stages || [];
+    }
+    // Guarantee exactly 10 proper stages
+    if (!Array.isArray(roadmapData) || roadmapData.length === 0) throw new Error("empty roadmap");
+    const fallback10 = generateFallbackRoadmap(skill);
+    roadmapData = roadmapData.slice(0, 10).map((s, i) => ({
+      step: s.step || i + 1,
+      title: s.title || fallback10[i].title,
+      description: s.description || fallback10[i].description,
+      topics: Array.isArray(s.topics) && s.topics.length ? s.topics.slice(0, 4) : fallback10[i].topics,
+    }));
+    while (roadmapData.length < 10) roadmapData.push(fallback10[roadmapData.length]);
     res.json({ roadmap: roadmapData });
   } catch (error) {
     const roadmapData = generateFallbackRoadmap(req.body.skill || "General CS");
