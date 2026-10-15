@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { SharedSidebar } from "../components/layout/SharedLayout";
 import { apiGenerateRoadmap } from "../services/api";
 import {
@@ -34,6 +35,10 @@ const LOADING_TIPS = [
 ];
 
 function Roadmap() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!localStorage.getItem("token")) { navigate("/login"); return; }
+  }, [navigate]);
   const [skill, setSkill] = useState("");
   const [submittedSkill, setSubmittedSkill] = useState("");
   const [roadmap, setRoadmap] = useState([]);

@@ -6,8 +6,11 @@ const { protect } = require("../middleware/auth");
 
 // Helper: generate JWT token
 const generateToken = (id) => {
-  const secret = process.env.JWT_SECRET || "ai_exam_prep_secret_key_2026";
-  return jwt.sign({ id }, secret, {
+  const secret = process.env.JWT_SECRET;
+  if (!secret && process.env.NODE_ENV === "production") {
+    throw new Error("JWT_SECRET is not configured");
+  }
+  return jwt.sign({ id }, secret || "ai_exam_prep_secret_key_2026", {
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
   });
 };
@@ -49,7 +52,7 @@ router.post("/register", async (req, res) => {
     });
   } catch (error) {
     console.error("Register error:", error);
-    res.status(500).json({ message: "Server error ❌", error: error.message });
+    res.status(500).json({ message: "Server error ❌" });
   }
 });
 
@@ -111,7 +114,7 @@ router.post("/login", async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: "Server error ❌", error: error.message });
+    res.status(500).json({ message: "Server error ❌" });
   }
 });
 

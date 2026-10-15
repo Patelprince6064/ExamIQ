@@ -98,6 +98,10 @@ Since Render runs in the cloud, it cannot connect to your local `localhost:27017
 Now that you have your live Vercel domain:
 1. Go back to [Render Dashboard](https://dashboard.render.com/) -> `examiq-backend` -> **Environment**.
 2. Update `CLIENT_URL` to your Vercel URL (e.g. `https://examiq.vercel.app`).
+   - The backend enforces a CORS allowlist: exact matches of `CLIENT_URL`
+     (comma-separated for multiple origins) plus `https://examiq*.vercel.app`
+     preview deployments. Any other origin gets `403 Origin not allowed`.
+   - Multiple origins example: `https://examiq-prep.vercel.app,http://localhost:3000`
 3. Render will automatically redeploy the service with updated environment variables.
 
 ---
@@ -116,3 +120,14 @@ Now that you have your live Vercel domain:
 
 - **Render Free Tier Spin-down**: Free Render Web Services spin down after 15 minutes of inactivity. The first request after idle can take ~30-50 seconds to wake up (Render's standard cold start).
 - **Persistent Storage**: Uploaded files on Render are stored in temporary instance disk. For production storage at scale, files can be streamed to AWS S3 or Cloudinary.
+
+## 🧰 Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| `403 Origin not allowed` from API | `CLIENT_URL` on Render doesn't match the Vercel domain | Set `CLIENT_URL` to the exact Vercel URL (no trailing slash); redeploy backend |
+| Frontend calls go to `localhost` in production | `REACT_APP_API_URL` missing at Vercel build time | Set `REACT_APP_API_URL=https://<backend>.onrender.com` in Vercel → **Redeploy** (CRA embeds it at build time) |
+| `500 Server configuration error` on login | `JWT_SECRET` missing on Render | Set a long random `JWT_SECRET` in Render env vars |
+| First API call slow (~30-50s) | Render free-tier cold start | Expected; retry once. Consider paid instance for production SLA |
+| Uploads disappear after redeploy | Render ephemeral disk | Expected on free tier; use S3/Cloudinary for persistence |
+| `JWT_SECRET` / `MONGO_URI` confusion locally | `.env` not loaded | Backend reads `MONGO_URI` (or `MONGODB_URI`) + `JWT_SECRET` from `backend/.env`; never commit that file |

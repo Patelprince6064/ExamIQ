@@ -9,11 +9,12 @@ try {
 }
 
 module.exports = (req, res) => {
+  const isProd = process.env.NODE_ENV === "production";
   if (initError) {
     return res.status(500).json({
       error: "Backend Initialization Error",
-      message: initError.message,
-      stack: initError.stack,
+      message: isProd ? "Internal server error" : initError.message,
+      ...(isProd ? {} : { stack: initError.stack }),
     });
   }
   try {
@@ -21,8 +22,8 @@ module.exports = (req, res) => {
   } catch (err) {
     return res.status(500).json({
       error: "Runtime Execution Error",
-      message: err.message,
-      stack: err.stack,
+      message: isProd ? "Internal server error" : err.message,
+      ...(isProd ? {} : { stack: err.stack }),
     });
   }
 };

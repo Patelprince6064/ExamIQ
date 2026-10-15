@@ -18,7 +18,7 @@ function PaperAnalyzer() {
   const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) { navigate("/login"); }
+    if (!localStorage.getItem("token")) { navigate("/login"); return; }
   }, [navigate]);
 
   const showToast = (msg, type = "success") => {

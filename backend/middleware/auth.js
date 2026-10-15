@@ -16,8 +16,15 @@ const protect = async (req, res, next) => {
       return res.status(401).json({ message: "Not authorized, no token ❌" });
     }
 
-    const secret = process.env.JWT_SECRET || "ai_exam_prep_secret_key_2026";
-    const decoded = jwt.verify(token, secret);
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      if (process.env.NODE_ENV === "production") {
+        console.error("FATAL: JWT_SECRET is not set in production");
+        return res.status(500).json({ message: "Server configuration error ❌" });
+      }
+      console.warn("WARNING: JWT_SECRET not set — using insecure dev fallback");
+    }
+    const decoded = jwt.verify(token, secret || "ai_exam_prep_secret_key_2026");
     req.user = await User.findById(decoded.id).select("-password");
 
     if (!req.user) {

@@ -23,19 +23,33 @@ connectDB();
 
 // ─── Security & Middleware ───────────────────────────────────────────────────
 app.use(helmet());
-app.use(morgan("dev"));
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
+
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:3000")
+  .split(",")
+  .map((s) => s.trim().replace(/\/+$/, ""))
+  .filter(Boolean);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      callback(null, true);
+      // Allow non-browser clients (no Origin header) and exact allowlist matches.
+      // Also allow Vercel preview deployments of the same project.
+      if (!origin) return callback(null, true);
+      const clean = origin.replace(/\/+$/, "");
+      const isAllowed =
+        allowedOrigins.includes(clean) ||
+        allowedOrigins.includes("*") ||
+        /^https:\/\/examiq.*\.vercel\.app$/.test(clean) ||
+        /^https:\/\/.*-examiq.*\.vercel\.app$/.test(clean);
+      if (isAllowed) return callback(null, true);
+      return callback(new Error("CORS: Origin not allowed"), false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.options("*", cors());
 
 // Ensure DB is connected in serverless environments
 app.use(async (req, res, next) => {
@@ -99,9 +113,16 @@ app.use((err, req, res, next) => {
       message: "File is too large. Maximum supported file size is 50 MB.",
     });
   }
-  res.status(err.status || 500).json({
-    message: err.message || "Internal server error ❌",
-  });
+  if (err.message === "CORS: Origin not allowed") {
+    return res.status(403).json({ message: "Origin not allowed ❌" });
+  }
+  const status = err.status || 500;
+  // Don't leak internal error details in production for 5xx errors
+  const message =
+    status >= 500 && process.env.NODE_ENV === "production"
+      ? "Internal server error ❌"
+      : err.message || "Internal server error ❌";
+  res.status(status).json({ message });
 });
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
