@@ -809,24 +809,92 @@ function Subjects() {
                 )}
               </div>
             ) : section === "video" ? (
-              <div className="video-view">
-                <div className="video-card">
-                  <div className="video-thumb">
-                    <div className="video-play-btn"><HiOutlinePlay size={28} /></div>
-                    <div className="video-thumb-label">YouTube Lecture</div>
+              <div className="xp-video" key={`video-${activeTopic?.name}`}>
+                <div className="xp-video-bg" aria-hidden="true">
+                  <span className="xp-orb xp-orb-1" />
+                  <span className="xp-orb xp-orb-2" />
+                  <span className="xp-orb xp-orb-3" />
+                  <span className="xp-float xp-f1" /> <span className="xp-float xp-f2" />
+                  <span className="xp-float xp-f3" /> <span className="xp-float xp-f4" />
+                  <span className="xp-float xp-f5" /> <span className="xp-float xp-f6" />
+                </div>
+                <div className="xp-video-hero xp-rise" style={{ animationDelay: "0ms" }}>
+                  <a className="xp-player" href={activeTopic.videoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${activeTopic.name} on YouTube`}>
+                    <div className="xp-player-screen">
+                      <div className="xp-player-grid" aria-hidden="true" />
+                      <div className="xp-player-badge">▶ &nbsp;NOW PLAYING · YOUTUBE CURATED</div>
+                      <div className="xp-eq" aria-hidden="true">
+                        {Array.from({ length: 28 }).map((_, i) => (
+                          <span key={i} style={{ animationDelay: `${(i % 14) * 0.12}s`, animationDuration: `${0.9 + ((i * 37) % 10) / 10}s` }} />
+                        ))}
+                      </div>
+                      <div className="xp-play-wrap">
+                        <span className="xp-pulse" />
+                        <span className="xp-pulse xp-pulse-2" />
+                        <span className="xp-play-btn"><HiOutlinePlay size={34} /></span>
+                      </div>
+                      <div className="xp-player-meta">
+                        <div className="xp-live-dot" />
+                        <div>
+                          <div className="xp-player-topic">{activeTopic.name}</div>
+                          <div className="xp-player-sub">{selected.name} · {selected.code} · HD Lecture</div>
+                        </div>
+                        <span className="xp-hd">4K</span>
+                      </div>
+                    </div>
+                  </a>
+                  <div className="xp-video-copy">
+                    <p className="xp-eyebrow"><span className="xp-eyebrow-dot" /> VIDEO LAB · {selected.code}</p>
+                    <h2>Watch <span className="xp-grad-text">{activeTopic.name}</span> come alive</h2>
+                    <p className="xp-video-desc">Hand-tuned YouTube searches for this exact topic — pick your learning vibe. Each card opens the freshest, most-viewed lectures in a new tab.</p>
+                    <div className="xp-chip-row">
+                      <span className="xp-chip">⚡ Crash Course</span>
+                      <span className="xp-chip">🎓 Deep Dive</span>
+                      <span className="xp-chip">📝 PYQ + Tricks</span>
+                    </div>
+                    <a className="xp-cta-red" href={activeTopic.videoUrl} target="_blank" rel="noopener noreferrer">
+                      <span className="xp-cta-play"><HiOutlinePlay size={16} /></span> Watch Best Match on YouTube
+                      <HiOutlineArrowRight size={16} />
+                    </a>
+                    <p className="xp-video-hint">Tip: filter by most-viewed · Neso Academy · Gate Smashers · Abdul Bari · Jenny's Lectures</p>
                   </div>
-                  <div className="video-info">
-                    <h3>{activeTopic.name}</h3>
-                    <p>Watch an in-depth video lecture on <strong>{activeTopic.name}</strong> from <strong>{selected.name}</strong>. Opens YouTube with the most relevant lectures for this exact topic.</p>
+                </div>
+
+                <div className="xp-playlist">
+                  {[
+                    { tag: "⚡ Fastest", title: "Crash Course", desc: "Full topic in 15–20 min, rapid revision", grad: "linear-gradient(135deg,#f43f5e,#f97316)", query: `${activeTopic.name} ${selected.name} crash course one shot`, dur: "18:42" },
+                    { tag: "🎓 In Depth", title: "Deep Lecture", desc: "Concept-first long lecture, zero gaps", grad: "linear-gradient(135deg,#2563eb,#06b6d4)", query: `${activeTopic.name} ${selected.name} full lecture in depth`, dur: "52:10" },
+                    { tag: "📝 Exam Mode", title: "PYQ + Tricks", desc: "Previous-year questions & shortcuts", grad: "linear-gradient(135deg,#10b981,#059669)", query: `${activeTopic.name} ${selected.name} previous year questions tricks`, dur: "27:35" },
+                    { tag: "🎧 Shorts", title: "Visual Bites", desc: "Shorts & animations for memory hooks", grad: "linear-gradient(135deg,#8b5cf6,#ec4899)", query: `${activeTopic.name} ${selected.name} explained visually shorts`, dur: "08:19" },
+                  ].map((v, i) => (
                     <a
-                      className="video-link-btn"
-                      href={activeTopic.videoUrl}
+                      key={v.title}
+                      className="xp-vcard xp-rise"
+                      style={{ animationDelay: `${120 + i * 90}ms` }}
+                      href={`https://www.youtube.com/results?search_query=${encodeURIComponent(v.query)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <HiOutlinePlay size={16} /> Watch on YouTube
+                      <div className="xp-vthumb" style={{ background: v.grad }}>
+                        <span className="xp-vtag">{v.tag}</span>
+                        <span className="xp-vplay"><HiOutlinePlay size={18} /></span>
+                        <span className="xp-vdur">{v.dur}</span>
+                        <span className="xp-vshine" />
+                      </div>
+                      <div className="xp-vbody">
+                        <div className="xp-vtitle">{v.title}</div>
+                        <div className="xp-vdesc">{v.desc}</div>
+                        <div className="xp-vgo">Open on YouTube <HiOutlineArrowRight size={13} /></div>
+                      </div>
                     </a>
-                    <p className="video-hint">Tip: look for the most-viewed lectures from trusted channels (Neso Academy, Gate Smashers, Abdul Bari…)</p>
+                  ))}
+                </div>
+
+                <div className="xp-marquee xp-rise" style={{ animationDelay: "420ms" }} aria-hidden="true">
+                  <div className="xp-marquee-track">
+                    {[0, 1].map((k) => (
+                      <span key={k}>▶ WATCH AT 1.5x SPEED &nbsp;·&nbsp; ✍ TAKE NOTES WHILE WATCHING &nbsp;·&nbsp; ⏸ PAUSE & RECALL &nbsp;·&nbsp; 🧠 TEACH IT BACK &nbsp;·&nbsp; 🔁 REVISE IN 24 HRS &nbsp;·&nbsp;</span>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -910,48 +978,91 @@ function Subjects() {
                     </div>
                   </div>
                 ) : (
-                  /* ── MODE SELECTION ── */
-                  <>
-                    <div className="test-modes">
-                      <div className="test-mode-card">
-                        <div className="test-mode-icon"><HiOutlineDocumentText size={28} /></div>
-                        <h3>Descriptive Questions</h3>
-                        <p>Practice university-style theory questions on <strong>{activeTopic.name}</strong> — one question at a time, with a dedicated answer box.</p>
-                        <button
-                          className="test-mode-btn"
-                          onClick={() => loadDescriptive(activeTopic)}
-                        >
-                          Start Questions →
-                        </button>
+                  /* ── INNOVATIVE MODE SELECTION ── */
+                  <div className="xp-test" key={`test-${activeTopic?.name}`}>
+                    <div className="xp-test-bg" aria-hidden="true">
+                      <span className="xp-orb xp-orb-1" />
+                      <span className="xp-orb xp-orb-2" />
+                      <span className="xp-float xp-f1" /> <span className="xp-float xp-f3" />
+                      <span className="xp-float xp-f5" /> <span className="xp-float xp-f2" />
+                    </div>
+                    <div className="xp-test-hero xp-rise">
+                      <div className="xp-timer-orb" aria-hidden="true">
+                        <span className="xp-timer-ring" />
+                        <span className="xp-timer-core"><HiOutlineClipboardCheck size={26} /></span>
+                        <span className="xp-timer-spark xp-ts1">✦</span>
+                        <span className="xp-timer-spark xp-ts2">✦</span>
+                        <span className="xp-timer-spark xp-ts3">●</span>
                       </div>
-
-                      <div className="test-mode-card mcq">
-                        <div className="test-mode-icon"><HiOutlineClipboardCheck size={28} /></div>
-                        <h3>MCQ Test</h3>
-                        <p>Attempt a <strong>20-question</strong> AI-generated MCQ test on <strong>{activeTopic.name}</strong> with instant results.</p>
-                        <div className="difficulty-row" style={{ justifyContent: "center" }}>
+                      <div className="xp-test-copy">
+                        <p className="xp-eyebrow dark"><span className="xp-eyebrow-dot" /> TEST ARENA · {selected.code} · {activeTopic.name}</p>
+                        <h2>How do you want to <span className="xp-grad-text">prove it?</span></h2>
+                        <p className="xp-test-sub">Two arenas, one goal — mastery. Write like it's the final exam, or sprint through 20 rapid-fire MCQs.</p>
+                        <div className="xp-steps">
+                          <span className="xp-step done"><i>1</i> Pick arena</span>
+                          <span className="xp-step-line" />
+                          <span className="xp-step"><i>2</i> Attempt</span>
+                          <span className="xp-step-line" />
+                          <span className="xp-step"><i>3</i> Review AI feedback</span>
+                        </div>
+                      </div>
+                      <div className="xp-level-card">
+                        <p className="xp-level-label">SELECT DIFFICULTY</p>
+                        <div className="xp-diff-row">
                           {Object.entries(DIFFICULTY_CONFIG).map(([key, cfg]) => (
-                            <button key={key} className={`diff-btn ${difficulty === key ? "active" : ""}`}
-                              style={difficulty === key ? { background: cfg.bg, color: cfg.color, borderColor: cfg.border } : {}}
+                            <button key={key} className={`xp-diff ${difficulty === key ? "active" : ""}`}
+                              style={difficulty === key ? { background: cfg.bg, color: cfg.color, borderColor: cfg.border, boxShadow: `0 4px 16px ${cfg.color}33` } : {}}
                               onClick={() => setDifficulty(key)}>
+                              <span className="xp-diff-dot" style={{ background: cfg.color }} />
                               {cfg.label}
                             </button>
                           ))}
                         </div>
-                        <button
-                          className="test-mode-btn primary"
-                          onClick={() => generateQuiz(activeTopic, 20)}
-                          disabled={quizLoading}
-                        >
-                          {quizLoading ? "Generating 20 MCQs…" : "Start 20 MCQs →"}
-                        </button>
+                        <div className="xp-level-meter">
+                          <span className={`xp-meter-fill lvl-${difficulty}`} />
+                        </div>
+                        <p className="xp-level-hint">{difficulty === "easy" ? "Warm-up · build confidence" : difficulty === "medium" ? "Exam standard · balanced" : "Challenger · rank-booster"}</p>
                       </div>
                     </div>
-                    <div className="topic-hint">
-                      <HiOutlineNewspaper size={16} />
-                      Choose a test mode for <strong>&nbsp;{activeTopic.name}</strong>
+
+                    <div className="xp-modes">
+                      <button className="xp-mode xp-rise xp-mode-theory" style={{ animationDelay: "100ms" }} onClick={() => loadDescriptive(activeTopic)}>
+                        <span className="xp-mode-glow" />
+                        <span className="xp-mode-top">
+                          <span className="xp-mode-icon theory"><HiOutlineDocumentText size={26} /></span>
+                          <span className="xp-mode-badge">✍ WRITTEN · 5 Qs</span>
+                        </span>
+                        <span className="xp-mode-title">Descriptive Arena</span>
+                        <span className="xp-mode-desc">University-style theory on <strong>{activeTopic.name}</strong> — one question at a time, distraction-free answer box. Copy-paste locked, like a real exam hall.</span>
+                        <span className="xp-mode-feats">
+                          <span>📄 Model answers</span><span>⏱ Self-paced</span><span>🎯 {`5 marks each`}</span>
+                        </span>
+                        <span className="xp-mode-cta">Enter Arena <HiOutlineArrowRight size={16} /></span>
+                      </button>
+
+                      <button className="xp-mode xp-rise xp-mode-mcq" style={{ animationDelay: "200ms" }} onClick={() => generateQuiz(activeTopic, 20)} disabled={quizLoading}>
+                        <span className="xp-mode-glow" />
+                        <span className="xp-mode-top">
+                          <span className="xp-mode-icon mcq"><HiOutlineClipboardCheck size={26} /></span>
+                          <span className="xp-mode-badge hot"><span className="xp-blink" />🔥 MOST PICKED · 20 Qs</span>
+                        </span>
+                        <span className="xp-mode-title">MCQ Blitz</span>
+                        <span className="xp-mode-desc">20 AI-generated rapid-fire MCQs on <strong>{activeTopic.name}</strong> at <strong>{difficulty}</strong> level — instant score, explanations & weak-topic radar.</span>
+                        <span className="xp-mode-feats">
+                          <span>⚡ Instant result</span><span>💡 Explanations</span><span>🚨 Weak-topic AI</span>
+                        </span>
+                        <span className="xp-mode-cta primary">{quizLoading ? (<><span className="loading-ring sm" /> Generating 20 MCQs…</>) : (<>Start 20 MCQs <HiOutlineArrowRight size={16} /></>)}</span>
+                      </button>
                     </div>
-                  </>
+
+                    <div className="xp-strip xp-rise" style={{ animationDelay: "300ms" }}>
+                      <span><HiOutlineSparkles size={15} /> AI grades your MCQs instantly</span>
+                      <span className="xp-strip-dot" />
+                      <span><HiOutlineNewspaper size={15} /> Descriptive builds exam writing muscle</span>
+                      <span className="xp-strip-dot" />
+                      <span>🏆 Beat your {selected.code} average</span>
+                    </div>
+                  </div>
                 )}
               </div>
             ) : null}
