@@ -197,21 +197,34 @@ function PdfUpload() {
         )}
 
         {/* Header */}
-        <div className="pdf-header">
-          <div>
-            <h1>PDF Upload & Question Generator</h1>
-            <p>Upload your lecture notes, textbooks or any PDF — AI will generate exam-ready questions from them.</p>
+        <div className="pdf-bg" aria-hidden="true">
+          <span className="pdf-orb pdf-orb-1" />
+          <span className="pdf-orb pdf-orb-2" />
+          <span className="pdf-float pf1" /><span className="pdf-float pf2" />
+          <span className="pdf-float pf3" /><span className="pdf-float pf4" />
+        </div>
+        <div className="pdf-header pdf-rise">
+          <span className="pdf-hero-icon">📚</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p className="pdf-eyebrow"><span className="pdf-eyebrow-dot" /> DOC LAB · PDF → QUIZ</p>
+            <h1>Turn PDFs into <span className="pdf-grad">exam-ready quizzes</span></h1>
+            <p>Upload lecture notes or textbooks — AI generates exam-ready questions from them.</p>
+          </div>
+          <div className="pdf-hero-stat">
+            <strong>{notes.length}</strong>
+            <span>PDF{notes.length === 1 ? "" : "s"} stored</span>
           </div>
         </div>
 
         {/* Upload Card */}
-        <div className="upload-card">
+        <div className="upload-card pdf-rise" style={{ animationDelay: "80ms" }}>
           <div className="upload-card-header">
-            <div className="upload-card-icon">PDF</div>
+            <div className="upload-card-icon"><span className="pdf-icon-pulse" />PDF</div>
             <div>
               <h2>Upload New PDF</h2>
-              <p>PDF files only · Max 50 MB</p>
+              <p>PDF files only · Max 50 MB · drag, drop, done</p>
             </div>
+            <span className="pdf-step-pills"><span><i>1</i> Upload</span><span className="pdf-mini-line" /><span><i>2</i> Generate</span><span className="pdf-mini-line" /><span><i>3</i> Practice</span></span>
           </div>
 
           {/* Drag & Drop Zone */}
@@ -229,20 +242,21 @@ function PdfUpload() {
               style={{ display: "none" }}
               onChange={handleFileChange}
             />
+            <span className="drop-ants" aria-hidden="true" />
             {file ? (
               <>
-                <div className="drop-file-icon">📄</div>
+                <div className="drop-file-icon pdf-bounce">📄</div>
                 <div className="drop-file-name">{file.name}</div>
-                <div className="drop-file-size">{formatSize(file.size)} · Ready to upload</div>
+                <div className="drop-file-size"><span className="pdf-ready-dot" />{formatSize(file.size)} · Ready to upload</div>
                 <button className="drop-change" onClick={(e) => { e.stopPropagation(); setFile(null); setTitle(""); }}>
                   Change File ×
                 </button>
               </>
             ) : (
               <>
-                <div className="drop-icon">📂</div>
-                <div className="drop-text">Drag & drop your PDF here</div>
-                <div className="drop-sub">or click to browse</div>
+                <div className="drop-icon pdf-float-icon">📂</div>
+                <div className="drop-text">{dragOver ? "Drop it — we've got it! ✨" : "Drag & drop your PDF here"}</div>
+                <div className="drop-sub">or <span className="drop-browse">click to browse</span> · watch the magic happen</div>
               </>
             )}
           </div>
@@ -273,16 +287,17 @@ function PdfUpload() {
           </div>
 
           <button
-            className="upload-btn"
+            className={`upload-btn ${file && !uploading ? "ready" : ""}`}
             onClick={handleUpload}
             disabled={uploading || !file}
           >
             {uploading ? (
-              <><span className="btn-spinner"></span> Uploading…</>
+              <><span className="btn-spinner"></span> Uploading… parsing pages…</>
             ) : (
-              <div className="btn-inner-row">Upload PDF</div>
+              <div className="btn-inner-row">⬆ Upload PDF {file ? "→ Generate magic" : ""}</div>
             )}
           </button>
+          {uploading && <div className="pdf-upload-bar"><span /></div>}
         </div>
 
         {/* Uploaded Notes */}
@@ -298,15 +313,16 @@ function PdfUpload() {
               <p>Loading your notes…</p>
             </div>
           ) : notes.length === 0 ? (
-            <div className="notes-empty">
-              <div className="notes-empty-icon">📂</div>
+            <div className="notes-empty pdf-rise">
+              <div className="notes-empty-icon pdf-float-icon">📂</div>
               <h3>No PDFs uploaded yet</h3>
               <p>Upload your first PDF above to start generating practice questions!</p>
+              <div className="pdf-empty-hint">✨ Tip: lecture slides + past notes = gold-standard quizzes</div>
             </div>
           ) : (
             <div className="notes-grid">
-              {notes.map((note) => (
-                <div className={`note-card ${activeNote?._id === note._id ? "active-note" : ""}`} key={note._id}>
+              {notes.map((note, ni) => (
+                <div className={`note-card pdf-rise ${activeNote?._id === note._id ? "active-note" : ""}`} style={{ animationDelay: `${Math.min(ni, 8) * 60}ms` }} key={note._id}>
                   <div className="note-card-top">
                     <div className="note-icon">📄</div>
                     <div className="note-info">
@@ -347,11 +363,13 @@ function PdfUpload() {
 
         {/* Generated Quiz Section */}
         {questions.length > 0 && (
-          <div className="quiz-section" id="quiz-section">
+          <div className="quiz-section pdf-rise" id="quiz-section">
             <div className="quiz-section-header">
               <div>
+                <p className="pdf-eyebrow" style={{ marginBottom: 6 }}><span className="pdf-eyebrow-dot" /> AI-GENERATED · {questions.length} QUESTIONS</p>
                 <h2>Generated Quiz</h2>
-                <p>From: <strong>{activeNote?.title}</strong> · {activeNote?.subject}</p>
+                <p>From: <strong>{activeNote?.title}</strong> · {activeNote?.subject} · {Object.keys(answers).length}/{questions.length} answered</p>
+                <div className="pdf-quiz-bar"><span style={{ width: `${(Object.keys(answers).length / questions.length) * 100}%` }} /></div>
               </div>
               {submitted && (
                 <div className="quiz-score-badge">
@@ -368,7 +386,7 @@ function PdfUpload() {
                 const isWrong = submitted && userAns && userAns !== q.correctAnswer;
 
                 return (
-                  <div className={`quiz-item ${submitted ? (isCorrect ? "correct" : isWrong ? "wrong" : "unanswered") : ""}`} key={qi}>
+                  <div className={`quiz-item pdf-rise ${submitted ? (isCorrect ? "correct" : isWrong ? "wrong" : "unanswered") : ""} ${answers[qi] && !submitted ? "answering" : ""}`} style={{ animationDelay: `${Math.min(qi, 8) * 55}ms` }} key={qi}>
                     <div className="quiz-q-header">
                       <span className="quiz-q-num">Q{qi + 1}</span>
                       <p className="quiz-q-text">{q.question}</p>

@@ -85,19 +85,43 @@ return (
       <div className="pdf-main">
         {toast && <div className={`pdf-toast ${toast.type}`}>{toast.msg}</div>}
 
-        <div className="pdf-header">
-          <div>
-            <h1>Paper Analyzer</h1>
-            <p>Upload a past University or Mid Sem paper. AI will instantly extract the most frequently asked topics to help you prioritize your studying.</p>
+        <div className="pdf-bg" aria-hidden="true">
+          <span className="pdf-orb pdf-orb-1" />
+          <span className="pdf-orb pdf-orb-3" />
+          <span className="pdf-float pf1" /><span className="pdf-float pf3" /><span className="pdf-float pf5" />
+        </div>
+        <div className="pdf-header pdf-rise">
+          <span className="pdf-hero-icon scan">🔍</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p className="pdf-eyebrow"><span className="pdf-eyebrow-dot" /> PAPER X-RAY · PYQ INTELLIGENCE</p>
+            <h1>Decode papers into <span className="pdf-grad">most-asked topics</span></h1>
+            <p>Upload a past University or Mid Sem paper. AI instantly extracts repeat topics — or solves the whole paper.</p>
+          </div>
+          <div className="pdf-hero-stat">
+            <strong>{mode === "solve" ? "Q&A" : "TOP"}</strong>
+            <span>{mode === "solve" ? "solve mode" : "topics mode"}</span>
           </div>
         </div>
 
-        <div className="upload-card">
+        <div className="pa-modes pdf-rise" style={{ animationDelay: "60ms" }} role="group" aria-label="Analysis mode">
+          {[
+            { id: "topics", icon: "🎯", title: "Extract Topics", desc: "Rank most-asked topics & sub-topics" },
+            { id: "solve", icon: "💡", title: "Solve Paper", desc: "Full question-by-question answers" },
+          ].map((m) => (
+            <button key={m.id} className={`pa-mode${mode === m.id ? " active" : ""}`} onClick={() => setMode(m.id)}>
+              <span className="pa-mode-icon">{m.icon}</span>
+              <span><strong>{m.title}</strong><span className="pa-mode-desc">{m.desc}</span></span>
+              {mode === m.id && <span className="pa-mode-check">✓</span>}
+            </button>
+          ))}
+        </div>
+
+        <div className="upload-card pdf-rise" style={{ animationDelay: "100ms" }}>
           <div className="upload-card-header">
-            <div className="upload-card-icon">PDF</div>
+            <div className="upload-card-icon"><span className="pdf-icon-pulse" />PDF</div>
             <div>
               <h2>Upload Exam Paper</h2>
-              <p>PDF or Image files · Max 50 MB</p>
+              <p>PDF or Image files · Max 50 MB · AI X-ray inside</p>
             </div>
           </div>
 
@@ -115,20 +139,22 @@ return (
               style={{ display: "none" }}
               onChange={handleFileChange}
             />
+            <span className="drop-ants" aria-hidden="true" />
+            <span className="pa-scanline" aria-hidden="true" />
             {file ? (
               <>
-                <div className="drop-file-icon">📄</div>
+                <div className="drop-file-icon pdf-bounce">📄</div>
                 <div className="drop-file-name">{file.name}</div>
-                <div className="drop-file-size">{formatSize(file.size)} · Ready to analyze</div>
+                <div className="drop-file-size"><span className="pdf-ready-dot" />{formatSize(file.size)} · Ready to analyze</div>
                 <button className="drop-change" onClick={(e) => { e.stopPropagation(); setFile(null); }}>
                   Change File ×
                 </button>
               </>
             ) : (
               <>
-                <div className="drop-icon">📂</div>
-                <div className="drop-text">Drag & drop your exam paper here</div>
-                <div className="drop-sub">or click to browse</div>
+                <div className="drop-icon pdf-float-icon">📄</div>
+                <div className="drop-text">{dragOver ? "Drop it — X-ray starting! ✨" : "Drag & drop your exam paper here"}</div>
+                <div className="drop-sub">or <span className="drop-browse">click to browse</span> · PDF or photo of the paper</div>
               </>
             )}
           </div>
@@ -153,44 +179,54 @@ return (
           </div>
 
           <button
-            className="upload-btn"
-            style={{ marginTop: "16px", background: "#3b82f6" }}
+            className={`upload-btn ${file && !analyzing ? "ready" : ""}`}
+            style={{ marginTop: "16px" }}
             onClick={handleAnalyze}
             disabled={analyzing || !file}
           >
             {analyzing ? (
-              <><span className="btn-spinner"></span> Analyzing Paper…</>
+              <><span className="btn-spinner"></span> X-raying paper… ranking topics…</>
             ) : (
-              mode === "solve" ? "💡 Solve Entire Paper" : "🔍 Extract Most Asked Topics"
+              mode === "solve" ? "💡 Solve Entire Paper →" : "🔍 Extract Most Asked Topics →"
             )}
           </button>
+          {analyzing && <div className="pdf-upload-bar"><span /></div>}
         </div>
 
         {/* RESULTS SECTION */}
         {result && result.topics && (
-          <div className="analyzer-result-card">
+          <div className="analyzer-result-card pdf-rise">
             <div className="result-header">
-              <h2>Most Asked Topics</h2>
+              <div>
+                <p className="pdf-eyebrow" style={{ marginBottom: 4 }}><span className="pdf-eyebrow-dot" /> X-RAY COMPLETE</p>
+                <h2>Most Asked Topics</h2>
+              </div>
               <span className="result-subject-badge">{result.subject}</span>
             </div>
 
             <div className="topics-list">
               {result.topics && result.topics.length > 0 ? (
-                result.topics.sort((a, b) => b.count - a.count).map((topic, i) => (
-                  <div key={i} className="topic-item">
-                    <div className="topic-item-header">
-                      <h3>{topic.name}</h3>
-                      <span className="topic-count">{topic.count} {topic.count === 1 ? 'time' : 'times'}</span>
+                result.topics.sort((a, b) => b.count - a.count).map((topic, i) => {
+                  const max = Math.max(...result.topics.map((t) => t.count), 1);
+                  const w = Math.max(8, Math.round((topic.count / max) * 100));
+                  const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
+                  return (
+                    <div key={i} className="topic-item pdf-rise" style={{ animationDelay: `${Math.min(i, 8) * 70}ms` }}>
+                      <div className="topic-item-header">
+                        <h3><span className="pa-rank">{medal}</span> {topic.name}</h3>
+                        <span className="topic-count pulse">{topic.count} {topic.count === 1 ? 'time' : 'times'}</span>
+                      </div>
+                      <div className="pa-bar"><span style={{ width: `${w}%` }} /></div>
+                      {topic.subTopics && topic.subTopics.length > 0 && (
+                        <ul className="subtopics-list">
+                          {topic.subTopics.map((sub, j) => (
+                            <li key={j}>{sub}</li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
-                    {topic.subTopics && topic.subTopics.length > 0 && (
-                      <ul className="subtopics-list">
-                        {topic.subTopics.map((sub, j) => (
-                          <li key={j}>{sub}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <p>No major topics found. Ensure the PDF contains recognizable text.</p>
               )}
@@ -199,22 +235,26 @@ return (
         )}
 
         {result && result.qaList && (
-          <div className="analyzer-result-card">
+          <div className="analyzer-result-card pdf-rise">
             <div className="result-header">
-              <h2>Paper Solution</h2>
+              <div>
+                <p className="pdf-eyebrow" style={{ marginBottom: 4 }}><span className="pdf-eyebrow-dot" /> FULL SOLUTION</p>
+                <h2>Paper Solution</h2>
+              </div>
               <span className="result-subject-badge">{result.subject}</span>
             </div>
 
             <div className="topics-list">
               {result.qaList && result.qaList.length > 0 ? (
                 result.qaList.map((qa, i) => (
-                  <div key={i} className="topic-item">
+                  <div key={i} className="topic-item pa-qa pdf-rise" style={{ animationDelay: `${Math.min(i, 8) * 60}ms` }}>
                     <div className="topic-item-header">
-                      <h3 style={{ color: "#3b82f6", fontSize: "16px", lineHeight: "1.4" }}>Q{i + 1}: {qa.question}</h3>
+                      <h3><span className="pa-qbadge">Q{i + 1}</span> {qa.question}</h3>
                     </div>
-                    <p style={{ margin: 0, color: "#475569", fontSize: "15px", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
-                      <strong>Answer:</strong><br />{qa.answer}
-                    </p>
+                    <div className="pa-answer">
+                      <span className="pa-ans-label">✓ Model answer</span>
+                      <p>{qa.answer}</p>
+                    </div>
                   </div>
                 ))
               ) : (
