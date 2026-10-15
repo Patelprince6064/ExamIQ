@@ -635,140 +635,170 @@ function Subjects() {
           </>
 
         ) : section === "result" && result ? (
-          <div className="result-screen">
-            <div className="result-hero">
-              <div className="result-emoji">{result.result.score >= 70 ? "🎉" : result.result.score >= 40 ? "📚" : "💪"}</div>
-              <h2>{result.result.score >= 70 ? "Excellent Work!" : result.result.score >= 40 ? "Good Effort!" : "Keep Practicing!"}</h2>
-              <p className="result-subtitle">{quiz?.topic || activeTopic?.name} · {selected.code}</p>
+          <div className="xp-result" key={`result-${quiz?.topic}-${result.result.score}`}>
+            <div className="xp-quiz-bg" aria-hidden="true">
+              <span className="xp-orb xp-orb-1" /><span className="xp-orb xp-orb-2" /><span className="xp-orb xp-orb-3" />
             </div>
-            <div className="result-score-row">
-              <div className="result-score-card"><div className="result-score-val">{result.result.score}%</div><div className="result-score-label">Score</div></div>
-              <div className="result-score-card"><div className="result-score-val">{result.result.correctAnswers}/{result.result.totalQuestions}</div><div className="result-score-label">Correct Answers</div></div>
-              <div className="result-score-card"><div className="result-score-val" style={{ color: result.result.score >= 70 ? "#22c55e" : "#ef4444" }}>{result.result.score >= 70 ? "Passed" : "Needs Review"}</div><div className="result-score-label">Status</div></div>
-            </div>
-
-            {/* ANSWER REVIEW WITH EXPLANATIONS */}
-            <div className="result-review-section">
-              <h3 className="review-heading">📝 Detailed Question & Explanation Review</h3>
-              <div className="review-list">
-                {quiz.questions.map((q, i) => {
-                  const isCorrect = answers[i] === q.correctAnswer;
-                  return (
-                    <div className={`review-card ${isCorrect ? 'correct' : 'wrong'}`} key={i}>
-                      <div className="review-q-header">
-                        <div className="review-q-title-row">
-                          <span className="review-badge">Q{i + 1}</span>
-                          <span className={`result-tag-badge ${isCorrect ? 'tag-correct' : 'tag-wrong'}`}>
-                            {isCorrect ? "✓ Right" : "✕ Wrong"}
-                          </span>
-                        </div>
-                        <p className="review-q-text-body">{q.question}</p>
-                      </div>
-
-                      <div className="review-ans-row">
-                        <div className={`review-ans-box ${isCorrect ? 'green-bg' : 'red-bg'}`}>
-                          <span className="ans-label">Your Answer:</span>
-                          <span className="ans-val">{answers[i] || "Skipped"}</span>
-                        </div>
-                        {!isCorrect && (
-                          <div className="review-ans-box green-bg">
-                            <span className="ans-label">Correct Answer:</span>
-                            <span className="ans-val">{q.correctAnswer}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {(q.explanation || !isCorrect) && (
-                        <div className="review-explanation-box">
-                          <span className="explanation-icon">💡</span>
-                          <div>
-                            <strong>Explanation:</strong> {q.explanation || `The correct answer is "${q.correctAnswer}". Concept: ${q.topic || quiz.topic}.`}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+            {result.result.score >= 70 && (
+              <div className="xp-confetti" aria-hidden="true">
+                {Array.from({ length: 26 }).map((_, i) => (
+                  <span key={i} style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 13) * 0.22}s`, animationDuration: `${2.6 + ((i * 53) % 20) / 10}s`, background: ["#2563eb", "#22c55e", "#f59e0b", "#ec4899", "#06b6d4"][i % 5] }} />
+                ))}
               </div>
-            </div>
-
-            {/* WEAK TOPIC INTELLIGENCE & AI FEEDBACK */}
-            <div className="weak-topic-feedback-card">
-              <div className="weak-topic-head">
-                <div className="weak-topic-icon">🚨</div>
-                <div>
-                  <h3>Weak Topic Intelligence & AI Tutor Feedback</h3>
-                  <p>Personalized analysis based on your quiz performance</p>
+            )}
+            <div className="xp-res-hero xp-rise">
+              <div className="xp-trophy">
+                <span className="xp-pulse" /><span className="xp-pulse xp-pulse-2" />
+                <span className="xp-trophy-core">{result.result.score >= 70 ? "🏆" : result.result.score >= 40 ? "📚" : "💪"}</span>
+              </div>
+              <div className="xp-res-copy">
+                <p className="xp-eyebrow dark"><span className="xp-eyebrow-dot" /> RESULT · {quiz?.topic || activeTopic?.name} · {selected.code}</p>
+                <h2>{result.result.score >= 70 ? (<>Excellent <span className="xp-grad-text">Work!</span></>) : result.result.score >= 40 ? (<>Good <span className="xp-grad-text">Effort!</span></>) : (<>Keep <span className="xp-grad-text">Pushing!</span></>)}</h2>
+                <p className="xp-res-sub">{result.result.score >= 70 ? "You nailed the core concepts — now lock in mastery." : result.result.score >= 40 ? "Solid base. Fix the gaps below and you'll jump fast." : "Every topper started here — review the breakdown and retry."}</p>
+                <div className="xp-res-pills">
+                  <span className={`xp-status ${result.result.score >= 70 ? "pass" : "review"}`}>{result.result.score >= 70 ? "✓ Passed" : "◉ Needs Review"}</span>
+                  <span className="xp-res-topic">{quiz?.topic || activeTopic?.name}</span>
                 </div>
               </div>
+              <div className="xp-score-ring">
+                <svg viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="#e2e8f0" strokeWidth="11" />
+                  <circle cx="60" cy="60" r="52" fill="none" stroke={result.result.score >= 70 ? "#22c55e" : result.result.score >= 40 ? "#f59e0b" : "#ef4444"}
+                    strokeWidth="11" strokeLinecap="round" strokeDasharray="326.7" strokeDashoffset={326.7 - (326.7 * result.result.score) / 100}
+                    className="xp-ring-draw" />
+                </svg>
+                <div className="xp-score-center"><strong>{result.result.score}%</strong><span>score</span></div>
+              </div>
+            </div>
 
-              {/* Identified Weak Topics Pills */}
+            <div className="xp-stat-row">
+              {[
+                { label: "Score", val: `${result.result.score}%`, icon: "🎯", cls: "blue", d: "60ms" },
+                { label: "Correct", val: `${result.result.correctAnswers}/${result.result.totalQuestions}`, icon: "✅", cls: "green", d: "130ms" },
+                { label: "Accuracy", val: `${Math.round((result.result.correctAnswers / Math.max(1, result.result.totalQuestions)) * 100)}%`, icon: "⚡", cls: "amber", d: "200ms" },
+              ].map((s) => (
+                <div key={s.label} className={`xp-stat xp-rise xp-stat-${s.cls}`} style={{ animationDelay: s.d }}>
+                  <span className="xp-stat-icon">{s.icon}</span>
+                  <div><div className="xp-stat-val">{s.val}</div><div className="xp-stat-label">{s.label}</div></div>
+                </div>
+              ))}
+            </div>
+
+            <div className="xp-review-head xp-rise" style={{ animationDelay: "220ms" }}>
+              <h3>📝 Detailed Question & Explanation Review</h3>
+              <p>Tap through every miss — explanations turn mistakes into marks.</p>
+            </div>
+            <div className="xp-review-list">
+              {quiz.questions.map((q, i) => {
+                const isCorrect = answers[i] === q.correctAnswer;
+                return (
+                  <div className={`xp-rcard xp-rise ${isCorrect ? "ok" : "bad"}`} style={{ animationDelay: `${Math.min(i, 8) * 55}ms` }} key={i}>
+                    <div className="xp-rcard-top">
+                      <span className="xp-qnum">Q{i + 1}</span>
+                      <span className={`xp-verdict ${isCorrect ? "ok" : "bad"}`}>{isCorrect ? "✓ Right" : "✕ Wrong"}</span>
+                    </div>
+                    <p className="xp-rcard-q">{q.question}</p>
+                    <div className="xp-rcard-ans">
+                      <div className={`xp-ans ${isCorrect ? "good" : "meh"}`}><span>Your Answer</span><strong>{answers[i] || "Skipped"}</strong></div>
+                      {!isCorrect && <div className="xp-ans good"><span>Correct Answer</span><strong>{q.correctAnswer}</strong></div>}
+                    </div>
+                    {(q.explanation || !isCorrect) && (
+                      <div className="xp-explain"><span>💡</span><div><strong>Explanation: </strong>{q.explanation || `The correct answer is "${q.correctAnswer}". Concept: ${q.topic || quiz.topic}.`}</div></div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="xp-weak xp-rise" style={{ animationDelay: "150ms" }}>
+              <div className="xp-weak-glow" aria-hidden="true" />
+              <div className="xp-weak-head">
+                <span className="xp-weak-icon">🚨</span>
+                <div><h3>Weak Topic Intelligence & AI Tutor Feedback</h3><p>Personalized analysis based on your quiz performance</p></div>
+              </div>
               {quiz.questions.some((q, i) => answers[i] !== q.correctAnswer) && (
-                <div className="weak-topics-pills-row">
-                  <span className="weak-topic-label">Identified Weak Topics:</span>
+                <div className="xp-weak-pills">
+                  <span className="xp-weak-label">Weak spots:</span>
                   {Array.from(new Set(quiz.questions.filter((q, i) => answers[i] !== q.correctAnswer).map(q => q.topic || quiz.topic))).map(top => (
-                    <span className="weak-topic-pill" key={top}>⚠️ {top}</span>
+                    <span className="xp-weak-pill" key={top}>⚠️ {top}</span>
                   ))}
                 </div>
               )}
-
-              {result.feedback && (
-                <div className="feedback-content-box">
-                  <pre className="feedback-pre-text">{result.feedback}</pre>
-                </div>
-              )}
-
-              <div className="weak-topic-actions">
-                <Link
-                  to="/practice"
-                  state={{
-                    weakTopic: (result.weakTopics && result.weakTopics[0]) || quiz.topic,
-                    subject: quiz.subject,
-                  }}
-                  className="btn-practice-weak"
-                >
-                  🤖 Practice {(result.weakTopics && result.weakTopics[0]) || "Weak Topics"} in AI Tutor →
-                </Link>
-              </div>
+              {result.feedback && <div className="xp-feedback"><pre>{result.feedback}</pre></div>}
+              <Link to="/practice" state={{ weakTopic: (result.weakTopics && result.weakTopics[0]) || quiz.topic, subject: quiz.subject }} className="xp-weak-cta">
+                🤖 Practice {(result.weakTopics && result.weakTopics[0]) || "Weak Topics"} in AI Tutor →
+              </Link>
             </div>
 
-            <div className="result-actions">
-              <button className="result-btn primary" onClick={() => { setSection("test"); setQuiz(null); setAnswers({}); setResult(null); }}>Try Another Test</button>
-              <button className="result-btn" onClick={backToTopics}>All Topics</button>
+            <div className="xp-res-actions xp-rise" style={{ animationDelay: "200ms" }}>
+              <button className="xp-mode-cta primary" style={{ minWidth: 200 }} onClick={() => { setSection("test"); setQuiz(null); setAnswers({}); setResult(null); }}>Try Another Test →</button>
+              <button className="xp-mode-cta" style={{ minWidth: 160 }} onClick={backToTopics}>All Topics</button>
             </div>
           </div>
 
         ) : section === "quiz" ? (
-          <div className="quiz-screen">
-            <div className="quiz-topbar">
+          <div className="xp-quiz" key={`quiz-${quiz.topic}`}>
+            <div className="xp-quiz-bg" aria-hidden="true">
+              <span className="xp-orb xp-orb-1" /><span className="xp-orb xp-orb-2" />
+              <span className="xp-float xp-f1" /><span className="xp-float xp-f3" /><span className="xp-float xp-f5" />
+            </div>
+            <div className="xp-quiz-top xp-rise">
               <button className="s-back-btn" onClick={() => { setSection("test"); setQuiz(null); setAnswers({}); setResult(null); }}>← Test Menu</button>
-              <div style={{ display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
-                <span className="quiz-topic-tag">{quiz.topic}</span>
-                <span className="quiz-progress-txt">{Object.keys(answers).length}/{quiz.questions.length} answered</span>
+              <div className="xp-quiz-top-mid">
+                <span className="xp-quiz-topic"><span className="xp-live-dot" />{quiz.topic}</span>
+                <div className="xp-quiz-bar"><span className="xp-quiz-fill" style={{ width: `${(Object.keys(answers).length / quiz.questions.length) * 100}%` }} /></div>
+              </div>
+              <div className="xp-quiz-count">
+                <svg viewBox="0 0 36 36" className="xp-ring-sm">
+                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="#2563eb" strokeWidth="4" strokeLinecap="round"
+                    strokeDasharray={`${(Object.keys(answers).length / quiz.questions.length) * 97.4} 97.4`}
+                    style={{ transition: "stroke-dasharray 0.5s cubic-bezier(0.22,1,0.36,1)", transform: "rotate(-90deg)", transformOrigin: "center" }} />
+                </svg>
+                <span><strong>{Object.keys(answers).length}</strong>/{quiz.questions.length}</span>
               </div>
             </div>
-            <div className="quiz-questions">
-              {quiz.questions.map((q, i) => (
-                <div className={`quiz-q-card ${answers[i] ? "answered" : ""}`} key={i}>
-                  <div className="quiz-q-header-row">
-                    <span className="quiz-q-badge">Q{i + 1}</span>
-                    <p className="quiz-q-text">{q.question}</p>
-                  </div>
-                  <div className="quiz-options">
-                    {q.options.map((opt, oi) => (
-                      <label key={oi} className={`quiz-option-label ${answers[i] === opt ? "selected" : ""}`}>
-                        <input type="radio" name={`q${i}`} value={opt} checked={answers[i] === opt} onChange={() => setAnswers((prev) => ({ ...prev, [i]: opt }))} />
-                        <span className="quiz-opt-letter">{String.fromCharCode(65 + oi)}</span>
-                        <span>{opt}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+            <div className="xp-palette xp-rise" style={{ animationDelay: "80ms" }} aria-hidden="true">
+              {quiz.questions.map((_, i) => (
+                <span key={i} className={`xp-dot ${answers[i] ? "done" : ""}`} style={{ animationDelay: `${i * 18}ms` }}>{i + 1}</span>
               ))}
             </div>
-            <button className="quiz-submit-btn" onClick={submitQuiz} disabled={Object.keys(answers).length < quiz.questions.length}>
-              Submit Quiz ({Object.keys(answers).length}/{quiz.questions.length} answered)
-            </button>
+            <div className="xp-questions">
+              {quiz.questions.map((q, i) => {
+                const answered = !!answers[i];
+                return (
+                  <div id={`xp-q-${i}`} key={i} className={`xp-qcard xp-rise ${answered ? "answered" : ""}`} style={{ animationDelay: `${Math.min(i, 10) * 60}ms` }}>
+                    <div className="xp-qhead">
+                      <span className="xp-qnum">Q{i + 1}</span>
+                      <p className="xp-qtext">{q.question}</p>
+                      {answered && <span className="xp-qcheck">✓</span>}
+                    </div>
+                    <div className="xp-opts">
+                      {q.options.map((opt, oi) => {
+                        const sel = answers[i] === opt;
+                        return (
+                          <label key={oi} className={`xp-opt ${sel ? "selected" : ""}`}>
+                            <input type="radio" name={`q${i}`} value={opt} checked={sel} onChange={() => setAnswers((prev) => ({ ...prev, [i]: opt }))} />
+                            <span className="xp-opt-letter">{String.fromCharCode(65 + oi)}</span>
+                            <span className="xp-opt-text">{opt}</span>
+                            <span className="xp-opt-tick">✓</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="xp-submitbar xp-rise" style={{ animationDelay: "120ms" }}>
+              <div className="xp-submit-info">
+                <strong>{Object.keys(answers).length}/{quiz.questions.length} answered</strong>
+                <span>{quiz.questions.length - Object.keys(answers).length === 0 ? "All set — unleash your score!" : `${quiz.questions.length - Object.keys(answers).length} more to go…`}</span>
+              </div>
+              <button className={`xp-submit-btn ${Object.keys(answers).length >= quiz.questions.length ? "ready" : ""}`} onClick={submitQuiz} disabled={Object.keys(answers).length < quiz.questions.length || quizLoading}>
+                {quizLoading ? (<><span className="loading-ring sm" /> Submitting…</>) : (<>Submit Quiz →</>)}
+              </button>
+            </div>
           </div>
 
         ) : (
