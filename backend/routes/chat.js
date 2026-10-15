@@ -26,6 +26,19 @@ const cleanAIResponse = (text) => {
     .trim();
 };
 
+// Short-circuit greetings / small-talk even when Groq is live —
+// reply instantly like a human tutor, no exam-guide dump.
+const SMALLTALK_RE = /^(hi+|hii+|hey+|hello+|yo|hola|namaste|good\s?(morning|afternoon|evening)|gm|gn|thanks?|thank\s?you|thx|bye|goodbye|see\s?you|ok|okay|cool|nice|great|awesome|hmm|oh|ah|yeah|yes|no|fine|who\s?are\s?you|what\s?can\s?you\s?do|help|how\s?do\s?(you|u)\s?work)\b/i;
+const isSmalltalk = (msg) => {
+  const t = (msg || "").trim();
+  if (!t) return false;
+  if (t.length <= 2) return true;
+  if (SMALLTALK_RE.test(t.toLowerCase())) return true;
+  const words = t.split(/\s+/).filter(Boolean);
+  if (words.length === 1 && words[0].length <= 4) return true;
+  return false;
+};
+
 // ─── POST /chat ───────────────────────────────────────────────────────────────
 // Main AI tutor chat (used by AIPractice.js)
 router.post("/", protect, async (req, res) => {
@@ -34,6 +47,12 @@ router.post("/", protect, async (req, res) => {
 
     if (!message || !message.trim()) {
       return res.status(400).json({ reply: "Please provide a message ❌" });
+    }
+
+    // Conversational fast-path: always handled locally for instant, human feel
+    if (isSmalltalk(message)) {
+      const reply = generateFallbackChatResponse(message);
+      return res.json({ reply: cleanAIResponse(reply) });
     }
 
     if (!process.env.GROQ_API_KEY || process.env.GROQ_API_KEY.includes("your_groq_api_key")) {
@@ -54,12 +73,18 @@ router.post("/", protect, async (req, res) => {
         messages: [
           {
             role: "system",
-            content: `You are an expert Computer Science professor and tutor helping students prepare for college semester exams and technical interviews.
-You specialize in: Data Structures & Algorithms (DSA), Operating Systems (OS), Database Management Systems (DBMS), Computer Networks (CN), and Artificial Intelligence (AI).
+            content: `You are a warm, professional AI study partner — a friendly Computer Science professor chatting 1-on-1 with a student. You specialize in DSA, OS, DBMS, CN and AI for college semester exams and technical interviews.
 
-CRITICAL FORMATTING INSTRUCTIONS:
-1. NEVER output markdown hash symbols (#, ##, ###, ####) for headings. Use clean bold headings (e.g. **Core Principles:** or 📌 Overview:) or numbered lists instead.
-2. ALWAYS provide comprehensive, detailed, long-form answers suitable for university exams. Explain definitions, theoretical architecture, step-by-step algorithms, trade-offs, code or examples, and exam tips in full detail. Avoid brief, truncated, or superficial summaries.`,
+CONVERSATION RULES (follow strictly):
+1. Chat like a human tutor, not a textbook. Greet back naturally when greeted. Be encouraging, concise when the user is casual, detailed when they ask a real study question.
+2. NEVER treat greetings ("hi", "hello", "hey"), thanks, goodbyes, "ok", or vague 1-2 word messages as exam topics. Reply conversationally (2-4 lines) and ask what they'd like to study, with 2-3 concrete example prompts.
+3. For real study questions: start with a 1-line friendly acknowledgement, then give a structured answer (short intro → key points with examples → quick takeaway). Match depth to the question — a "what is X?" gets a clear focused answer, an "explain in detail" gets the full breakdown with examples and exam tips.
+4. End study answers with ONE engaging follow-up: a quick check question, an offer to quiz, or a next-topic suggestion. Never end abruptly.
+5. If the request is ambiguous, ask a brief clarifying question instead of guessing with a giant generic guide.
+
+FORMATTING:
+- NEVER output markdown hash symbols (#, ##, ###) for headings. Use bold mini-headings (e.g. **Core idea:**) or a few emojis (📌 🔹 ⚙️ 📝 🎯) sparingly.
+- Use short paragraphs, bullets and numbered steps. Include a tiny code snippet or example only when it genuinely helps.`,
           },
           {
             role: "user",

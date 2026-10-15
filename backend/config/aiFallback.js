@@ -457,10 +457,47 @@ function sanitizeText(str) {
 }
 
 /**
+ * Conversational replies for greetings / small-talk / vague input.
+ * The tutor must chat like a human — never dump an "Exam Guide" for "hi".
+ */
+const CONVERSATIONAL_PATTERNS = [
+  { match: /^(hi+|hii+|hey+|hello+|yo|hola|namaste|good\s?(morning|afternoon|evening)|gm|gn)\b/, reply: `👋 Hey there! Great to see you.\n\nI'm your AI study partner for **DSA, OS, DBMS, CN and AI**. Tell me what's on your mind — for example:\n\n• "Explain Deadlock in OS"\n• "Generate 5 MCQs on Binary Trees"\n• "What is the TCP 3-way handshake?"\n\nWhat would you like to learn today?` },
+  { match: /^(thanks?|thank\s?you|thx|shukriya|dhanyavad)/, reply: `You're most welcome! 😊\n\nWant me to quiz you on this topic, explain it deeper, or move to the next one? Just say the word.` },
+  { match: /^(bye|goodbye|see\s?you|alvida|good\s?night)/, reply: `Goodbye and good luck with your prep! 👋\n\nQuick tip before you go: revise one weak topic today — consistency beats cramming. Come back anytime!` },
+  { match: /^(who\s?are\s?you|what\s?can\s?you\s?do|help|how\s?do\s?(you|u)\s?work|features)/, reply: `🤖 I'm your **AI Practice Tutor** — here to make exam prep feel like chatting with a friendly professor.\n\nI can:\n\n1. **Explain** any DSA / OS / DBMS / CN / AI concept with examples\n2. **Generate MCQs** and practice questions on any topic\n3. **Build study plans** around your exam date and weak topics\n\nTry: "Explain SQL Joins with examples" or "Generate 5 MCQs on OS Deadlocks".` },
+  { match: /^(ok|okay|cool|nice|great|awesome|hmm|oh|ah|yeah|yes|no|fine)\b/, reply: `Got it! 👍\n\nTell me which topic to dive into — e.g. "Explain process scheduling" or "Quiz me on DBMS normalization". What shall we tackle next?` },
+];
+
+function conversationalReply(message) {
+  const text = (message || "").trim().toLowerCase();
+  if (!text) return null;
+  for (const p of CONVERSATIONAL_PATTERNS) {
+    if (p.match.test(text)) return p.reply;
+  }
+  // Ultra-short / vague input (1-2 chars, single generic word) → ask, don't lecture
+  // (CS abbreviations like TCP / SQL / DSA / OS are real topics — let them through)
+  const words = text.split(/\s+/).filter(Boolean);
+  const isCsAbbr = /^(tcp|udp|sql|dsa|os|cn|ai|dbms|bst|avl|sjf|fcfs|acid|bcnf|1nf|2nf|3nf)$/.test(text);
+  if (text.length <= 2 || (words.length === 1 && words[0].length <= 4 && !isCsAbbr)) {
+    return `Hey! 👋 I didn't quite catch the topic.\n\nCould you tell me a little more? For example:\n\n• "Explain Binary Trees with an example"\n• "What is process scheduling?"\n• "Generate MCQs on SQL Joins"\n\nWhat would you like to study?`;
+  }
+  // A bare CS topic ("Binary Trees", "Deadlocks", "TCP") is a real question — let the knowledge base answer it
+  if (/(tree|bst|deadlock|banker|tcp|handshake|syn|ack|osi|sql|join|normal|acid|dbms|schedul|process|fcfs|round\s?robin|array|stack|queue|graph|heap|dsa|os\b|cn\b|ai\b|mcq|quiz|explain)/.test(text)) return null;
+  if (words.length <= 2) {
+    return `Interesting — "${(message || "").trim()}" could mean a few things! 🤔\n\nAre you asking about a **concept** (I'll explain it), or do you want **practice questions** on it? Give me a topic like "Deadlock in OS" and I'll take it from there.`;
+  }
+  return null;
+}
+
+/**
  * Generate fallback response for chat
  */
 function generateFallbackChatResponse(message) {
   const lowerMsg = (message || "").toLowerCase();
+
+  // 0. Conversational first — greetings & small-talk never get an exam dump
+  const convo = conversationalReply(message);
+  if (convo) return sanitizeText(convo);
 
   // 1. Check for specific topic MCQs first if user asked for MCQs + Topic
   if (lowerMsg.includes("mcq") || lowerMsg.includes("quiz") || lowerMsg.includes("question")) {
